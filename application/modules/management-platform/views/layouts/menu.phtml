@@ -1,0 +1,54 @@
+<style type="text/css">
+    a{
+        text-decoration: none;
+        color:#fff;
+    }
+    .tree-node-hover a{
+        color: #333;
+    }
+    .tree-node-hover span{
+        color: #333;
+    }
+
+    #_easyui_tree_1.tree-node-hover span .tree-title-menu{
+        color: #333!important;
+    }
+</style>
+<?php
+    $navigation = (array)$this->adminNavigation;
+	$nowNavigation = array();
+    $nowController = $this->view->getControllerName();
+    $nowAction = $this->view->getActionName();
+
+foreach ($navigation as $navigationMain)	{
+        $navigationMain = (array)$navigationMain;
+?>
+
+    <ul class="easyui-tree">
+        
+		<li>  
+            <span><div class="tree-title-menu"><?php echo $navigationMain['label']; ?></div></span>
+			<ul class="styleblue">
+<?php
+		foreach ($navigationMain['pages'] as $navigationSub) {
+            $navigationSub = (array)$navigationSub;
+            if ($nowController == $navigationSub['controller'] && $nowAction == $navigationSub['action']) {
+                $this->view->menuTitle = $navigationSub['label'];
+            }
+
+
+			if(\Application\Model\Admin::verifyAction($this ,$navigationSub['action'], $navigationSub['controller'] ,$navigationSub['module'])) {
+?>
+				<li>  
+                	<span ><a href="<?php echo '/' . $navigationSub['module'] . '/' . $navigationSub['controller'] . '/' . $navigationSub['action']; ?>"><?php echo $navigationSub['label']; ?></a></span>
+                </li>  
+<?php
+			}
+		}
+?>
+			</ul>
+		</li>  
+    </ul>  
+<?php
+	}
+?>

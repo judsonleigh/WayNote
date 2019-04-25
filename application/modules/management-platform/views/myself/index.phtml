@@ -1,0 +1,49 @@
+	<div class="easyui-panel" title="个人密码修改" style="width:600px">
+        <div style="padding:10px 0 10px 60px">
+        <form method="post" id="passwdFm" method="post">
+            <div style="padding:0px 20px 0px 20px;">
+                <div style="margin-bottom:20px">
+                    <input id="pwd" name="pwd" class="easyui-passwordbox" prompt="密码" iconWidth="28" style="width:95%" required="required" data-options="label:'新密码:',validType:'length[6,50]'">
+                </div>
+                <div style="margin-bottom:20px">
+                    <input id="rpwd" name="rpwd" class="easyui-passwordbox" prompt="密码确认" iconWidth="28" style="width:95%" required="required" data-options="label:'密码确认:'" validType="equals['#pwd']">
+
+                </div>
+            </div>
+        </form>
+        </div>  
+        <div style="text-align:center;padding:5px">
+        	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="passwdSaveUser()">保存</a>  
+        </div>  
+    </div>
+    <script>
+		$.extend($.fn.validatebox.defaults.rules, {  
+		    equals: {  
+		        validator: function(value,param){  
+		            return value == $(param[0]).val();  
+		        },  
+		        message: '密码必须相同'  
+		    }  
+		}); 
+		
+        function passwdSaveUser(){  
+            $('#passwdFm').form('submit',{  
+                url: '/<?php echo $this->router->getModuleName(); ?>/myself/setPass/',
+                onSubmit: function(){  
+                    return $(this).form('validate');  
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');
+                    if (result.errorCode > 0){
+                        showError(result);
+                    }  else {
+                    	$.messager.show({  
+                            title: '提示',  
+                            msg: '密码修改成功！'  
+                        });
+                    	$('#passwdFm').form('clear');
+                    }  
+                }  
+            });
+        }
+    </script>  

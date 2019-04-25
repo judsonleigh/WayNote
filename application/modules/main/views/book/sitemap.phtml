@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <?php
+        foreach ($urlList as $nowUrl) {
+            ?>
+            <url>
+                <loc>https://note.waydo.xyz<?php echo $nowUrl['url']; ?></loc>
+                <lastmod><?php echo date('Y-m-d\TH:i:s', $nowUrl['time']); ?>+08:00</lastmod>
+            </url>
+            <?php
+        }
+    ?>
+</urlset>
+

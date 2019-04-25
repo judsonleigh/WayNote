@@ -1,0 +1,69 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title><?php echo $this->config['system']['title'] ?>管理系统</title>
+	<link type="image/x-icon" href="/images/default/logo.ico" rel="shortcut icon" />
+    <link rel="stylesheet" type="text/css" href="/plugin/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/plugin/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/plugin/easyui/themes/material/custom.css">
+
+    <script type="text/javascript" src="/js/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/plugin/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/plugin/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script>
+        function showError(result) {
+            $.messager.show({
+                title: '错误',
+                width: 300,
+                height: 130,
+                msg: '错误代码：' + result.errorCode
+                + '<br>错误信息：' + result.errorMsg
+            });
+        }
+    </script>
+</head>
+<body style="text-align: center;">
+ <h2><?php echo $this->config['system']['title'] ?></h2>
+    <div align="center">
+        <div class="easyui-panel" title="后台登录" style="width:100%;max-width:400px;padding:30px 30px; background-color: #AAD8C2">
+            <form id="ff" method="post" action="/<?php echo $this->router->getModuleName(); ?>/index/login">
+
+            <div style="padding:0px 20px 0px 20px;">
+                <div style="margin-bottom:20px">
+                    <input class="easyui-textbox" type="text" prompt="用户名" iconWidth="28" name="username" style="width:100%" data-options="label:'用户名:',required:true">
+
+                </div>
+                <div style="margin-bottom:20px">
+                    <input class="easyui-passwordbox" prompt="密码" name="password" iconWidth="28" style="width:100%" data-options="label:'密码:',required:true">
+                </div>
+	        </div>
+	        <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px"> 登录 </a>
+            </div>
+	        </form>
+	    </div>
+	    <script>
+            function submitForm () {
+                $('#ff').submit();
+            }
+            $(function(){
+                $('#ff').form({
+                    success:function(result){
+                        data = jQuery.parseJSON( result );
+                        if (data.errorCode == 0) {
+                            if (data.status == 1) {
+                                location.replace('/<?php echo $this->router->getModuleName(); ?>/main/');
+                            } else {
+                                $.messager.alert('提示', data.errorMsg , 'info');
+                            }
+                        } else {
+                            showError(data);
+                        }
+                    }
+                });
+            });
+
+        </script>
+    </div>
+</body>
+</html>

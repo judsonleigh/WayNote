@@ -1,0 +1,241 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title><?php
+    if (empty($oBook) == false) {
+        echo '《' . $oBook->bookName . '》笔记';
+    }
+        ?></title>
+    <meta name="keywords"  content="<?php
+    if (empty($oBook) == false) {
+        echo $oBook->bookName . ' ' . $oBook->bookSubname . ' 笔记 ' . $oBook->bookKey . ' ' . $oBook->author;
+        if (empty($infoList) == false) {
+            foreach ($infoList as $row) {
+                echo ' ' . $row['title'];
+            }
+        }
+        if (empty($typeList) == false) {
+            foreach ($typeList as $nowType) {
+                echo ' ' . $nowType;
+            }
+        }
+    }
+    ?>" />
+    <meta name="description" content="<?php
+    if (empty($oBook) == false) {
+        echo $oBook->bookName . ' ' . $oBook->bookSubname . ' 笔记 ' . $oBook->bookKey;
+    }
+    ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/shards.min.css?v=2.1.0">
+    <link rel="stylesheet" href="/css/shards-demo.min.css?v=2.1.0">
+</head>
+
+<body>
+<div class="loader">
+    <div class="page-loader"></div>
+</div>
+
+<!-- Floating Shards -->
+<?php
+if (empty($oBook->pic) == false) {
+?>
+    <img src="<?php echo $oBook->pic; ?>" alt="Shard" class="shard">
+<?php
+}
+?>
+
+<!-- Welcome Section -->
+<div class="welcome d-flex justify-content-center flex-column">
+    <div class="inner-wrapper mt-auto mb-auto">
+        <h2 class="slide-in" style="color:#fff; text-shadow: #222 0.1em 0.1em 0.2em">《<?php echo $oBook->bookName; ?>》笔记</h2>
+        <?php
+            if (empty($oBook->bookSubname) == false) {
+        ?>
+        <h4 class="slide-in" style="color:#fff; text-shadow: #222 0.1em 0.1em 0.2em"><?php echo $oBook->bookSubname; ?></h4>
+        <?php
+            }
+        ?>
+    </div>
+    <?php
+    if (empty($oBook->author) == false) {
+        ?>
+        <div class="product-by">
+            <h5 class="slide-in">作者：<?php echo $oBook->author; ?></h5>
+        </div>
+        <?php
+    }
+    ?>
+</div>
+<div style="text-align:center">
+    <?php echo \Application\Model\Config::getValueByMark('ads1');?>
+</div>
+<!-- Page Content -->
+<div class="page-content">
+    <!-- Content -->
+    <div class="content clearfix">
+        <!-- Typography -->
+        <div id="typography" class="container mb-5">
+            <div class="section-title col-lg-8 col-md-10 ml-auto mr-auto">
+                <h3 class="mb-4">信息整理 </h3>
+                <select class="custom-select" required onchange="changeType();" id="infoType">
+                    <option value="">全部类型</option>
+<?php
+    foreach ($typeList as $nowType) {
+        ?>
+        <option value="<?php echo $nowType; ?>"><?php echo $nowType; ?></option>
+        <?php
+    }
+?>
+                </select>
+            </div>
+
+            <div class="example col-md-10 ml-auto mr-auto">
+                <table class="table table-striped table-responsive-md">
+                    <thead>
+                    <tr>
+                        <th style="width: 80px">类型</th>
+                        <th style="width: 150px">知识点</th>
+                        <th>描述</th>
+                        <th>连接</th>
+                        <th style="width: 100px">时间</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+<?php
+    if (empty($infoList) == false) {
+        foreach ($infoList as $row) {
+        ?>
+        <tr>
+            <td><?php echo $row['type'] ?></td>
+            <td>
+                <h5><?php echo $row['title'] ?></h5>
+            </td>
+            <td><?php echo nl2br($row['introduce']) ?></td>
+            <td>
+                <?php
+                if (empty($row['url']) == false) {
+
+                ?>
+                <a target="_blank"
+                   href="<?php echo $row['url'] ?>">
+                    <button type="button" class="btn btn-outline-info">详情</button>
+                </a>
+                <?php
+                }
+                ?>
+            </td>
+            <td><?php echo substr($row['createTime'], 2, 8) ?></td>
+        </tr>
+        <?php
+        }
+    }
+?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <?php
+    if (empty($oBook->readUrl) == false) {
+        ?>
+        <!-- Documentation -->
+        <div id="documentation" class="bg-white">
+            <div class="section-title container ml-auto mr-auto py-5">
+                <div class="col-lg-8 col-md-10 ml-auto mr-auto py-5">
+                    <h1 class="mb-2 text-center">📘</h1>
+                    <h3 class="mb-4 text-center"></h3>
+                    <a class="d-table ml-auto mr-auto" target="_blank" href="<?php echo $oBook->readUrl; ?>">
+                        <button class="btn btn-pill btn-outline-primary">
+                            <i class="fa fa-book mr-1"></i> 在线阅读
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
+    <div style="text-align:center">
+        <?php echo \Application\Model\Config::getValueByMark('ads2');?>
+    </div>
+    <!-- Footer CTA -->
+    <div class="footer-cta bg-dark">
+        <div class="container">
+            <div class="row">
+<?php
+    if (empty($BookList) == false) {
+        foreach ($BookList as $row) {
+            ?>
+            <!-- Extra: App Landing Page -->
+            <div class="col-md-4 mb-4 ml-auto">
+                <div class="card">
+<?php
+    if (empty($row['pic']) == false) {
+        ?>
+        <img class="card-img-top" src="<?php echo $row['pic'] ?>" alt="<?php echo $row['bookName'] ?>" style="height: 350px;">
+        <?php
+    } else {
+        ?>
+        <img class="card-img-top" src="/images/management-platform/logo.png" alt="<?php echo $row['bookName'] ?>">
+        <?php
+    }
+?>
+                    <div class="card-body py-3">
+                        <h6 class="text-center text-muted m-0">《<?php echo $row['bookName'] ?>》笔记</h6>
+                    </div>
+                </div>
+                <a class="d-table ml-auto mr-auto mt-4" target="<?php echo $row['bookKey'] ?>"
+                   href="/book/name/<?php echo $row['bookKey'] ?>">
+                    <button class="btn btn-success btn-pill">查看笔记</button>
+                </a>
+            </div>
+            <?php
+        }
+    }
+?>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer py-5">
+        <p class="text-muted text-center small p-0 mb-4"><?php echo \Application\Model\Config::getValueByMark('copyright');?></p>
+        <div class="social d-table mx-auto">
+            <?php echo str_replace('\\\\','\\',\Application\Model\Config::getValueByMark('links'));?>
+        </div>
+    </footer>
+</div>
+
+<!-- JavaScript -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/js/shards.min.js"></script>
+<script src="/js/demo.min.js"></script>
+<script>
+    function changeType() {
+        nowInfoType = $('#infoType').val();
+        url = '/book/name/<?php echo $oBook->bookKey; ?>'
+        if (nowInfoType != '') {
+            url += '/' + nowInfoType;
+        }
+        location.replace(url);
+    }
+
+<?php
+    if (empty($infoType) == false) {
+    ?>
+    $('#infoType').val('<?php echo $infoType; ?>');
+    <?php
+    }
+?>
+</script>
+</body>
+
+</html>

@@ -1,0 +1,277 @@
+	<table id="dg" class="easyui-datagrid" style="width:100%; height: 100%;">
+    </table>  
+    <script>
+    $('#dg').datagrid({
+        url:'/<?php echo $this->router->getModuleName(); ?>/admin/list',
+        toolbar:"#toolbar",
+        pagination:"true",
+        rownumbers:"true",
+        fitColumns:"true",
+        singleSelect:"true", 
+        pageSize:"20",
+        columns:[[
+            {field:'adminId',title:'编号',width:20,align:'center'},  
+            {field:'username',title:'用户名',width:50},
+            {field:'realname',title:'姓名',width:50},
+            {field:'status',title:'状态',width:20,align:'center',formatter: function(value,row,index){
+				if (value == 1){
+					return '启用';
+				} else {
+					return '禁用';
+				}
+			}},
+			{field:'type',title:'类型',width:50,align:'center',formatter: function(value,row,index){
+				if (value == 1){
+					return '超级管理员';
+				} else {
+					return '普通管理员';
+				}
+			}},
+            {field:'createTime',title:'创建时间',width:100},
+        ]] 
+    });  
+    </script>
+    <div id="toolbar">
+<?php
+	if(\Application\Model\Admin::verifyAction($this ,'insert')) {
+?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newUser()">添加</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this ,'update')) {
+?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUser()">编辑</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this ,'delete')) {
+?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyUser()">删除</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this ,'set-pass')) {
+?>        
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-lock" plain="true" onclick="setPass()">设置密码</a>
+<?php 
+	} 
+?>          
+    </div>  
+      
+    <div id="addDlg" class="easyui-dialog" style="width:430px;height:320px;padding:10px 20px" closed="true" buttons="#addDlg-buttons" data-options="modal:true">
+        <div class="ftitle">管理员信息</div>  
+        <form id="addFm" method="post" novalidate>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="username" id="username" style="width:95%" data-options="label:'用户名:',required:true,validType:{length:[3,50],remote:['/<?php echo $this->router->getModuleName(); ?>/admin/checkUsername/','username']}" invalidMessage="此用户名长度错误或已被使用">
+            </div>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="realname" style="width:95%" data-options="label:'姓名:',required:true,validType:'length[1,50]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <select name="type" class="easyui-combobox" data-options="label:'类型:',required:true,editable:false,panelHeight:'auto'" style="width:80%">
+                    <option value="0" selected>普通管理员</option>
+                    <option value="1">超级管理员</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px">
+                <select name="status" class="easyui-combobox" data-options="label:'状态:',required:true,editable:false,panelHeight:'auto'" style="width:60%">
+                    <option value="1">启用</option>
+                    <option value="0">禁用</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    
+    <div id="updateDlg" class="easyui-dialog" style="width:430px;height:320px;padding:10px 20px" closed="true" buttons="#updateDlg-buttons" data-options="modal:true">
+        <div class="ftitle">管理员信息</div>  
+        <form id="updateFm" method="post" novalidate>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="username" id="username" style="width:95%" data-options="label:'用户名:'" readonly="readonly">
+            </div>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="realname" style="width:95%" data-options="label:'姓名:',required:true,validType:'length[1,50]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <select name="type" class="easyui-combobox" data-options="label:'类型:',required:true,editable:false,panelHeight:'auto'" style="width:80%">
+                    <option value="0" selected>普通管理员</option>
+                    <option value="1">超级管理员</option>
+                </select>
+            </div>
+            <div style="margin-bottom:10px">
+                <select name="status" class="easyui-combobox" data-options="label:'状态:',required:true,editable:false,panelHeight:'auto'" style="width:60%">
+                    <option value="1">启用</option>
+                    <option value="0">禁用</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    
+    <div id="passwdDlg" class="easyui-dialog" style="width:400px;height:220px;padding:10px 20px" closed="true" buttons="#passwdDlg-buttons" data-options="modal:true">
+        <div class="ftitle">修改密码</div>  
+        <form id="passwdFm" method="post" novalidate>
+            <div style="margin-bottom:10px">
+                <input id="pwd" name="pwd" class="easyui-passwordbox" prompt="密码" iconWidth="28" style="width:95%" required="required" data-options="label:'新密码:',validType:'length[6,50]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <input id="rpwd" name="rpwd" class="easyui-passwordbox" prompt="密码确认" iconWidth="28" style="width:95%" required="required" data-options="label:'密码确认:'" validType="equals['#pwd']">
+            </div>
+        </form>
+    </div>
+    
+    <div id="addDlg-buttons">  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="addSaveUser()">保存</a>  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#addDlg').dialog('close')">取消</a>  
+    </div>
+    <div id="updateDlg-buttons">  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="updateSaveUser()">保存</a>  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#updateDlg').dialog('close')">取消</a>  
+    </div>
+     <div id="passwdDlg-buttons">  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="passwdSaveUser()">保存</a>  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#passwdDlg').dialog('close')">取消</a>  
+    </div>
+    <script type="text/javascript">  
+    
+    	$.extend($.fn.validatebox.defaults.rules, {  
+    	    equals: {  
+    	        validator: function(value,param){  
+    	            return value == $(param[0]).val();  
+    	        },  
+    	        message: '密码必须相同'  
+    	    }  
+    	});  
+    	    
+        var url;  
+        function newUser(){  
+            $('#addDlg').dialog('open').dialog('setTitle','添加新管理员');  
+            $('#addFm').form('clear');
+            url = '/<?php echo $this->router->getModuleName(); ?>/admin/insert/';
+        }  
+        function editUser(){  
+            var row = $('#dg').datagrid('getSelected'); 
+            if (row){
+                $('#updateDlg').dialog('open').dialog('setTitle','编辑管理员信息');                
+                $('#updateFm').form('load',row);               	
+                url = '/<?php echo $this->router->getModuleName(); ?>/admin/update/' + row.adminId;
+   
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        } 
+        function setPass(){  
+            var row = $('#dg').datagrid('getSelected'); 
+            if (row){
+                console.log($('#pwd'));
+                $.parser.parse('#passwdFm');
+                $('#passwdDlg').dialog('open').dialog('setTitle','修改密码');
+                url = '/<?php echo $this->router->getModuleName(); ?>/admin/setPass/' + row.adminId;
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        }  
+        function addSaveUser(){  
+            $('#addFm').form('submit',{
+                url: url,  
+                onSubmit: function(){  
+                    return $(this).form('validate');  
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');  
+                    if (result.errorCode > 0){
+                        showError(result);
+                    } else {  
+                        $('#addDlg').dialog('close');      // close the dialog  
+                        $('#dg').datagrid('reload');    // reload the user data  
+                    }  
+                }  
+            });  
+        }  
+        function updateSaveUser(){  
+            $('#updateFm').form('submit',{  
+                url: url,  
+                onSubmit: function(){  
+                    return $(this).form('validate');  
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');  
+                    if (result.errorCode > 0){
+                        showError(result);
+                    } else {  
+                        $('#updateDlg').dialog('close');      // close the dialog  
+                        $('#dg').datagrid('reload');    // reload the user data  
+                    }  
+                }  
+            });  
+        }  
+        function destroyUser(){  
+            var row = $('#dg').datagrid('getSelected');  
+            if (row){  
+                $.messager.confirm('删除确认','您真的要删除此信息?',function(r){  
+                    if (r){  
+                        $.post('/<?php echo $this->router->getModuleName(); ?>/admin/delete/',{id:row.adminId},function(result){
+                            if (result.errorCode == 0){
+                                $('#dg').datagrid('reload');    // reload the user data  
+                            } else {
+                                showError(result);
+                            }  
+                        },'json');  
+                    }  
+                });  
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        } 
+        function passwdSaveUser(){  
+            $('#passwdFm').form('submit',{  
+                url: url,  
+                onSubmit: function(){  
+                    return $(this).form('validate');  
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');  
+                    if (result.errorCode > 0){
+                        showError(result);
+                    } else {  
+                        $('#passwdDlg').dialog('close');      // close the dialog  
+                        $('#dg').datagrid('reload');    // reload the user data  
+                    }  
+                }  
+            });  
+        }  
+    </script>  
+    <style type="text/css">  
+        #addFm{  
+            margin:0;  
+            padding:10px 30px;  
+        }  
+        .ftitle{  
+            font-size:14px;  
+            font-weight:bold;  
+            padding:5px 0;  
+            margin-bottom:10px;  
+            border-bottom:1px solid #ccc;  
+        }  
+        .fitem{  
+            margin-bottom:5px;  
+        }  
+        .fitem label{  
+            display:inline-block;  
+            width:80px;  
+        }  
+    </style> 

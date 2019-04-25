@@ -1,0 +1,144 @@
+<table id="dg" class="easyui-datagrid" style="width:100%; height: 100%;">
+</table>
+<script>
+    $('#dg').datagrid({
+        url:'/<?php echo $this->router->getModuleName(); ?>/config/list',
+        toolbar:"#toolbar",
+        pagination:"true",
+        rownumbers:"true",
+        fitColumns:"true",
+        singleSelect:"true",
+        pageSize:"20",
+        columns:[[
+            {field:'id',title:'编号',width:20,align:'center'},
+            {field:'title',title:'标题',width:100},
+            {field:'marker',title:'标识',width:50},
+            {field:'createTime',title:'创建时间',width:50,align:'center'},
+        ]]
+    });
+</script>
+<div id="toolbar">
+    <?php
+    if(\Application\Model\Admin::verifyAction($this, 'insert')) {
+        ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newInfo()">添加</a>
+        <?php
+    }
+
+    if(\Application\Model\Admin::verifyAction($this, 'update')) {
+        ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editInfo()">编辑</a>
+        <?php
+    }
+
+    if(\Application\Model\Admin::verifyAction($this, 'delete')) {
+        ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delInfo()">删除</a>
+        <?php
+    }
+    ?>
+</div>
+
+<div id="dlg" class="easyui-dialog" style="width:550px;height:320px;padding:10px 20px" closed="true" buttons="#dlg-buttons" data-options="modal:true">
+    <div class="ftitle">系统配置信息</div>
+    <form id="fm" method="post" novalidate>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="title" style="width:80%" data-options="label:'标题:',required:true,validType:'length[1,100]'">
+        </div>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="marker" style="width:65%" data-options="label:'标识:',required:true,validType:'length[1,20]'">
+        </div>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="value" style="width:80%;height:60px" data-options="label:'配置值:',multiline:true">
+
+        </div>
+    </form>
+</div>
+
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveInfo()">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+</div>
+<script type="text/javascript">
+    var url;
+    function newInfo(){
+        $('#dlg').dialog('open').dialog('setTitle','添加系统配置');
+        $('#fm').form('clear');
+        url = '/<?php echo $this->router->getModuleName(); ?>/config/insert';
+    }
+    function editInfo(){
+        var row = $('#dg').datagrid('getSelected');
+        if (row){
+            $('#dlg').dialog('open').dialog('setTitle','编辑系统配置');
+            $('#fm').form('load',row);
+            url = '/<?php echo $this->router->getModuleName(); ?>/config/update/' + row.id;
+        } else {
+            $.messager.show({
+                title: '警告',
+                msg: '请选择要操作的配置！',
+                timeout: 2000,
+                showType: 'slide'
+            });
+        }
+    }
+    function saveInfo(){
+        $('#fm').form('submit',{
+            url: url,
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                var result = eval('('+result+')');
+                if (result.errorCode > 0){
+                    showError(result);
+                } else {
+                    $('#dlg').dialog('close');      // close the dialog
+                    $('#dg').datagrid('reload');    // reload the user data
+                }
+            }
+        });
+    }
+    function delInfo(){
+        var row = $('#dg').datagrid('getSelected');
+        if (row){
+            $.messager.confirm('删除确认','您真的要删除此信息?',function(r){
+                if (r){
+                    $.post('/<?php echo $this->router->getModuleName(); ?>/config/delete/',{id:row.id},function(result){
+                        if (result.errorCode > 0){
+                            showError(result);
+                        } else {
+                            $('#dg').datagrid('reload');
+                        }
+                    },'json');
+                }
+            });
+        } else {
+            $.messager.show({
+                title: '警告',
+                msg: '请选择要操作的配置！',
+                timeout: 2000,
+                showType: 'slide'
+            });
+        }
+    }
+</script>
+<style type="text/css">
+    #fm{
+        margin:0;
+        padding:10px 30px;
+    }
+    .ftitle{
+        font-size:14px;
+        font-weight:bold;
+        padding:5px 0;
+        margin-bottom:10px;
+        border-bottom:1px solid #ccc;
+    }
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+</style>

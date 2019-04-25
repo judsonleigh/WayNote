@@ -1,0 +1,165 @@
+ 	<table id="dg" class="easyui-datagrid" style="width:100%; height: 100%;">
+    </table>  
+    <script>
+    $('#dg').datagrid({
+        url:'/<?php echo $this->router->getModuleName(); ?>/function/list',
+        toolbar:"#toolbar",
+        pagination:"true",
+        rownumbers:"true",
+        fitColumns:"true",
+        singleSelect:"true", 
+        pageSize:"20",
+        columns:[[
+            {field:'id',title:'功能编号',width:20,align:'center'},
+            {field:'moduleName',title:'模块名称',width:70},
+            {field:'functionName',title:'功能名称',width:70},
+            {field:'functionModule',title:'Module',width:40},
+            {field:'functionController',title:'Controller',width:40},
+            {field:'functionAction',title:'Action',width:40},
+            {field:'status',title:'状态',width:15,align:'center',formatter: function(value,row,index){
+				if (value == 1){
+					return '启用';
+				} else if (value == 0) {
+					return '禁用';
+				}
+			}},
+        ]] 
+    }); 
+    </script>
+    <div id="toolbar"> 
+<?php 
+	if(\Application\Model\Admin::verifyAction($this, 'insert')) {
+?>     
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="newInfo()">添加</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this, 'update')) {
+?>          
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editInfo()">编辑</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this, 'delete')) {
+?>          
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="delInfo()">删除</a>
+<?php 
+	} 
+	
+?>        
+    </div>  
+      
+    <div id="dlg" class="easyui-dialog" style="width:500px;height:380px;padding:10px 20px" closed="true" buttons="#dlg-buttons" data-options="modal:true">
+        <div class="ftitle">功能信息</div>  
+        <form id="fm" method="post" novalidate>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="moduleName" style="width:95%" data-options="label:'模块名称:',required:true,validType:'length[1,40]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="functionName" style="width:95%" data-options="label:'功能名称:',required:true,validType:'length[1,40]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="functionModule" style="width:95%" data-options="label:'Module',required:true,validType:'length[1,40]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="functionController" style="width:95%" data-options="label:'Modules:',required:true,validType:'length[1,40]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <input class="easyui-textbox" name="functionAction" style="width:95%" data-options="label:'Action:',required:true,validType:'length[1,40]'">
+            </div>
+            <div style="margin-bottom:10px">
+                <select name="status" class="easyui-combobox" data-options="label:'状态:',required:true,editable:false,panelHeight:'auto'" style="width:40%">
+                	<option value="1">启用</option>
+                	<option value="0">禁用</option>
+                </select>
+            </div>
+        </form>  
+    </div>
+    
+    <div id="dlg-buttons">  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="saveInfo()">保存</a>  
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')">关闭</a>  
+    </div>  
+    <script type="text/javascript">  
+        var url;  
+        function newInfo(){  
+            $('#dlg').dialog('open').dialog('setTitle','添加功能');  
+            $('#fm').form('clear');  
+            url = '/<?php echo $this->router->getModuleName(); ?>/function/insert';
+        }  
+        function editInfo(){  
+            var row = $('#dg').datagrid('getSelected');  
+            if (row){  
+                $('#dlg').dialog('open').dialog('setTitle','编辑功能');  
+                $('#fm').form('load',row);  
+                url = '/<?php echo $this->router->getModuleName(); ?>/function/update/' + row.id;
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的功能！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        }  
+        function saveInfo(){  
+            $('#fm').form('submit',{  
+                url: url,  
+                onSubmit: function(){  
+                    return $(this).form('validate');  
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');
+                    if (result.errorCode > 0){
+                        showError(result);
+                    } else {  
+                        $('#dlg').dialog('close');
+                        $('#dg').datagrid('reload');
+                    }  
+                }  
+            });  
+        }  
+        function delInfo(){  
+            var row = $('#dg').datagrid('getSelected');  
+            if (row){  
+                $.messager.confirm('删除确认','您真的要删除此信息?',function(r){  
+                    if (r){
+                        $.post('/<?php echo $this->router->getModuleName(); ?>/function/delete/',{id:row.id},function(result){
+                            if (result.errorCode > 0){
+                                showError(result);
+                            } else {
+                                $('#dg').datagrid('reload');
+                            }
+                        },'json');  
+                    }  
+                });  
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的功能！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        }  
+    </script>  
+    <style type="text/css">  
+        #fm{  
+            margin:0;  
+            padding:10px 30px;  
+        }  
+        .ftitle{  
+            font-size:14px;  
+            font-weight:bold;  
+            padding:5px 0;  
+            margin-bottom:10px;  
+            border-bottom:1px solid #ccc;  
+        }  
+        .fitem{  
+            margin-bottom:5px;  
+        }  
+        .fitem label{  
+            display:inline-block;  
+            width:80px;  
+        }  
+    </style> 

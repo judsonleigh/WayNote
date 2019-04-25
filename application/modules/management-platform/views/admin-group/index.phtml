@@ -1,0 +1,419 @@
+
+<table id="dg" class="easyui-datagrid" style="width:100%; height: 100%;">
+</table>
+<script>
+    $('#dg').datagrid({
+        url:'/<?php echo $this->router->getModuleName(); ?>/admin-group/list',
+        toolbar:"#toolbar",
+        pagination:"true",
+        rownumbers:"true",
+        fitColumns:"true",
+        singleSelect:"true", 
+        pageSize:"20",
+        columns:[[
+            {field:'id',title:'编号',width:20,align:'center'},  
+            {field:'name',title:'组名',width:50},
+            {field:'status',title:'状态',width:50,align:'center',formatter: function(value,row,index){
+				if (value == 1){
+					return '启用';
+				} else {
+					return '禁用';
+				}
+			}},
+        ]] 
+    });  
+    </script>
+<div id="toolbar">
+<?php 
+	if(\Application\Model\Admin::verifyAction($this, 'insert')) {
+?>
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-add" plain="true" onclick="newGroup()">添加</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this, 'update')) {
+?>		
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-edit" plain="true" onclick="editGroup()">编辑</a>
+<?php 
+	}
+
+	if(\Application\Model\Admin::verifyAction($this, 'set-group-admin')) {
+?>
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-man" plain="true" onclick="setAdmin()">设置管理员</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this, 'set-function')) {
+?>		
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-lock" plain="true" onclick="setFunction()">设置功能权限</a>
+<?php 
+	} 
+	
+	if(\Application\Model\Admin::verifyAction($this, 'delete')) {
+?>		
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-remove" plain="true" onclick="destroyGroup()">删除</a>
+<?php 
+	} 
+?>		
+</div>
+
+<div id="addDlg" class="easyui-dialog"
+	style="width: 400px; height: 250px; padding: 10px 20px" closed="true"
+	buttons="#addDlg-buttons" data-options="modal:true">
+	<div class="ftitle">管理员组信息</div>
+	<form id="addFm" method="post" novalidate>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="name" style="width:95%" data-options="label:'组名:',required:true,validType:'length[1,60]'">
+        </div>
+        <div style="margin-bottom:10px">
+            <select name="status" class="easyui-combobox" data-options="label:'状态:',required:true,editable:false,panelHeight:'auto'" style="width:60%">
+                <option value="1">启用</option>
+                <option value="0">禁用</option>
+            </select>
+		</div>
+	</form>
+</div>
+
+<div id="updateDlg" class="easyui-dialog"
+	style="width: 400px; height: 240px; padding: 10px 20px" closed="true"
+	buttons="#updateDlg-buttons" data-options="modal:true">
+	<div class="ftitle">管理员组信息</div>
+	<form id="updateFm" method="post" novalidate>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="name" style="width:95%" data-options="label:'组名:',required:true,validType:'length[1,60]'">
+		</div>
+        <div style="margin-bottom:10px">
+            <select name="status" class="easyui-combobox" data-options="label:'状态:',required:true,editable:false,panelHeight:'auto'" style="width:60%">
+                <option value="1">启用</option>
+                <option value="0">禁用</option>
+            </select>
+		</div>
+	</form>
+</div>
+
+<div id="adminDlg" class="easyui-dialog"
+	style="width: 950px; height: 560px; padding: 10px 20px" closed="true"
+	data-options="modal:true">
+	<div style="float: left">
+		<table id="adminDg" class="easyui-datagrid"
+			style="width: 430px; height: 500px"
+			data-options="
+	            	rownumbers: false,
+	            	singleSelect: true,
+	            	toolbar: '#adminList-toolbar'
+	            	">
+			<thead>
+				<tr>
+					<th data-options="field:'adminId',width:40">编号</th>
+					<th data-options="field:'username',width:130">用户名</th>
+					<th data-options="field:'realname',width:130">姓名</th>
+					<th
+						data-options="field:'status',width:100,formatter: function(value,row,index){
+	
+							if (value == 1){
+								return '启用';
+							} else {
+								return '禁用';
+							}
+						}">状态</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div style="float: right">
+		<table id="groupAdminDg" class="easyui-datagrid"
+			style="width: 430px; height: 500px"
+			data-options="
+	            	rownumbers:false,
+	            	singleSelect: true,
+	            	toolbar: '#groupAdminList-toolbar'
+	            ">
+			<thead>
+				<tr>
+					<th data-options="field:'adminId',width:40">编号</th>
+					<th data-options="field:'username',width:130">用户名</th>
+					<th data-options="field:'realname',width:130">姓名</th>
+					<th
+						data-options="field:'status',width:100,formatter: function(value,row,index){
+	
+							if (value == 1){
+								return '启用';
+							} else {
+								return '禁用';
+							}
+						}">状态</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+<div id="functionDlg" class="easyui-dialog"
+	style="width: 1150px; height: 560px; padding: 10px 10px 10px 10px;" closed="true"
+	data-options="
+		modal:true,
+		onClose:function()
+			{endFunctionEditing()}
+		">
+	<table id="functionDg" class="easyui-datagrid"
+			style="width: 99%; height: 100%;"
+			data-options="
+	            	rownumbers:false,
+	            	singleSelect: true,
+	            	onClickRow: onClickFunctionRow,
+	            ">
+			<thead>
+				<tr>
+					<th data-options="field:'id',width:40">编号</th>
+                    <th data-options="field:'moduleName',width:150">功能名称</th>
+					<th data-options="field:'functionName',width:250">功能名称</th>
+					<th data-options="field:'functionModule',width:200">Module</th>
+					<th data-options="field:'functionController',width:200">Controller</th>
+					<th data-options="field:'functionAction',width:200">Action</th>
+					<th data-options="field:'purview',width:40,align:'center',editor:{type:'checkbox',options:{on:'●',off:''}}">权限</th>
+            </thead>
+		</table>
+</div>
+	
+<div id="addDlg-buttons">
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-ok" onclick="addSaveGroup()">保存</a>
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-cancel"
+		onclick="javascript:$('#addDlg').dialog('close')">取消</a>
+</div>
+<div id="updateDlg-buttons">
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-ok" onclick="updateSaveGroup()">保存</a>
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-cancel"
+		onclick="javascript:$('#updateDlg').dialog('close')">取消</a>
+</div>
+<div id="adminList-toolbar" style="height: auto">
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-add" plain="true" onclick="setGroupAdmin(1)">加入管理员组</a>
+</div>
+<div id="groupAdminList-toolbar" style="height: auto">
+	<a href="javascript:void(0)" class="easyui-linkbutton"
+		iconCls="icon-remove" plain="true" onclick="setGroupAdmin(0)">从管理员组移除</a>
+</div>
+<script type="text/javascript">  
+        var url;  
+        var editIndex = undefined; 
+        function newGroup(){  
+            $('#addDlg').dialog('open').dialog('setTitle','添加新管理员组');  
+            $('#addFm').form('clear');
+            url = '/<?php echo $this->router->getModuleName(); ?>/admin-group/insert/';
+        }  
+        function editGroup(){  
+            var row = $('#dg').datagrid('getSelected'); 
+            if (row){
+                $('#updateDlg').dialog('open').dialog('setTitle','编辑管理员组信息');                
+                $('#updateFm').form('load',row);               	
+                url = '/<?php echo $this->router->getModuleName(); ?>/admin-group/update/' + row.id;
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员组！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        } 
+        function setAdmin(){  
+            var row = $('#dg').datagrid('getSelected'); 
+            if (row){
+                
+            	$('#adminDg').datagrid({
+            		title:'未添加的管理员列表',
+        			url:'/<?php echo $this->router->getModuleName(); ?>/admin-group/getUnjoinAdminList/' + row.id
+            	});
+
+            	$('#groupAdminDg').datagrid({
+            		title:'已添加的管理员列表',
+        			url:'/<?php echo $this->router->getModuleName(); ?>/admin-group/getGroupAdminList/' + row.id
+            	});
+            	
+            	$('#adminDlg').dialog('open').dialog('setTitle','设置"' + row.name + '"组管理员');
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员组！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        } 
+        function setFunction(){  
+            var row = $('#dg').datagrid('getSelected'); 
+            if (row){
+            	$('#functionDg').datagrid({
+            		title:'功能权限列表',
+        			url:'/<?php echo $this->router->getModuleName(); ?>/admin-group/getFunctionList/' + row.id
+            	});
+				
+            	$('#functionDg').datagrid('clearChecked');
+            	
+            	$('#functionDlg').dialog('open').dialog('setTitle','设置"' + row.name + '"组功能权限');
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员组！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        } 
+        function endFunctionEditing(){
+            if (editIndex == undefined){
+                return true;
+            }  
+            if ($('#functionDg').datagrid('validateRow', editIndex)){  
+                var ed = $('#functionDg').datagrid('getEditor', {index:editIndex,field:'id'});  
+                $('#functionDg').datagrid('endEdit', editIndex);
+                var rows = $('#functionDg').datagrid('getChanges');
+                if (rows != '') {  
+                	var nowFunctionId = rows[0]['id'];
+                	var nowMethod;
+                	if(rows[0]['purview'] == '●') {
+                		nowMethod = 1;
+                	} else {
+                		nowMethod = 0;
+                	}
+                	var dgRow = $('#dg').datagrid('getSelected');
+                	
+                	$.getJSON("/<?php echo $this->router->getModuleName(); ?>/admin-group/setFunction/" + dgRow.id + "/" + nowFunctionId + "/" + nowMethod,function(result){
+                        if (result.errorCode > 0){
+                            showError(result);
+                        }
+                    });
+               	 	$('#functionDg').datagrid('acceptChanges');  
+                }
+                editIndex = undefined;  
+                return true;  
+            } else {
+                return false;  
+            }  
+        } 
+        function onClickFunctionRow(index){  
+            if (endFunctionEditing()){  
+            	$('#functionDg').datagrid('selectRow', index)  
+            				.datagrid('beginEdit', index);  
+							editIndex = index;  
+			} else {  
+				$('#functionDg').datagrid('selectRow', editIndex);  
+			}
+        }  
+        function addSaveGroup(){  
+            $('#addFm').form('submit',{  
+                url: url,  
+                onSubmit: function(){  
+                    return $(this).form('validate');  
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');
+                    if (result.errorCode > 0){
+                        showError(result);
+                    } else {  
+                        $('#addDlg').dialog('close');      // close the dialog  
+                        $('#dg').datagrid('reload');    // reload the user data  
+                    }  
+                }  
+            });  
+        }
+        function updateSaveGroup(){  
+            $('#updateFm').form('submit',{  
+                url: url,  
+                onSubmit: function(){  
+                    return $(this).form('validate');  
+                },  
+                success: function(result){  
+                    var result = eval('('+result+')');
+                    if (result.errorCode > 0){
+                        showError(result);
+                    } else {
+                        $('#updateDlg').dialog('close');      // close the dialog  
+                        $('#dg').datagrid('reload');    // reload the user data  
+                    }  
+                }  
+            });  
+        }  
+        function destroyGroup(){  
+            var row = $('#dg').datagrid('getSelected');  
+            if (row){  
+                $.messager.confirm('删除确认','您真的要删除此信息?',function(r){  
+                    if (r){  
+                        $.post('/<?php echo $this->router->getModuleName(); ?>/admin-group/delete/',{id:row.id},function(result){
+                            if (result.errorCode > 0){
+                                showError(result);
+                            } else {
+                                $('#dg').datagrid('reload');    // reload the user data
+
+                            }
+                        },'json');
+                    }  
+                });  
+            } else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员组！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        }
+        function setGroupAdmin(setType){
+            if (setType == 1) {
+            	var row = $('#adminDg').datagrid('getSelected');
+            } else {
+            	var row = $('#groupAdminDg').datagrid('getSelected');
+            }
+        	  
+			if (row){
+				var adminGroupRow = $('#dg').datagrid('getSelected');  
+				$.post('/<?php echo $this->router->getModuleName(); ?>/admin-group/setGroupAdmin/',{id:adminGroupRow.id,adminId:row.adminId,type:setType},function(result){
+	                if (result.errorCode > 0){
+                        showError(result);
+	               	} else {
+                        $('#adminDg').datagrid('reload');
+                        $('#groupAdminDg').datagrid('reload');
+	                }  
+            	},'json');
+			} else {
+                $.messager.show({
+                    title: '警告',
+                    msg: '请选择要操作的管理员！',
+                    timeout: 2000,
+                    showType: 'slide'
+                });
+            }
+        }
+    </script>
+<style type="text/css">
+#addFm {
+	margin: 0;
+	padding: 10px 30px;
+}
+
+.ftitle {
+	font-size: 14px;
+	font-weight: bold;
+	padding: 5px 0;
+	margin-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.fitem {
+	margin-bottom: 5px;
+}
+
+.fitem label {
+	display: inline-block;
+	width: 80px;
+}
+</style>

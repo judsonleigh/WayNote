@@ -1,0 +1,53 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title><?php echo $this->config['system']['title'] ?></title>
+	<link type="image/x-icon" href="/images/default/logo.ico" rel="shortcut icon" />
+	<link rel="stylesheet" href="/css/management-platform/global.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/plugin/easyui/themes/material/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/plugin/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/plugin/easyui/themes/material/custom.css">
+    <script type="text/javascript" src="/js/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/plugin/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/plugin/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script>
+        function showError(result) {
+            $.messager.show({
+                title: '错误',
+                width: 300,
+                height: 130,
+                msg: '错误代码：' + result.errorCode
+                + '<br>错误编号：' + result.errorSerialNumber
+                + '<br>错误信息：' + result.errorMsg
+            });
+        }
+    </script>
+</head>
+
+<body style="text-align:left; ">
+<SCRIPT type="text/javascript">
+    console.log($(window));
+		var windowHeight = $(document).height();
+		var windowWidth = $(document).width();
+</SCRIPT>
+    <div id="mainFrame" class="easyui-layout" style="width:auto; min-height:700px; height: 100%">
+        <div data-options="region:'north',split:true" style="height:80px; background-color: #D3C499; overflow: hidden;">
+            <img src="/images/management-platform/logo.png" style="float:left;width:80px; height: 80px;">
+        	  <h2 style="float:left;width:auto; padding-top: 32px;"><?php echo $this->config['system']['title'] ?></h2>
+        </div>
+        <div data-options="region:'south',split:true" style="height:40px; font-family:'Arial'; color: #fff;  line-height:30px; text-align:right; padding-right:20px; background-color: #596D7A ">
+            <b>Copyright © 2011-2019 www.waysoft.net</b>
+
+        </div>  
+        <div data-options="region:'west',split:true" title="功能菜单" style="width:200px; background-color: #5E8572">
+        	<?php include 'menu.phtml'; ?>
+        </div>
+          <div data-options="region:'center',title:'<?php echo $this->view->menuTitle; ?>'" style="padding:5px; overflow-x:visible; overflow-y:visible;  background-color: #E3EBD2;">
+			<?php echo $this->getContent();	?>
+        </div>  
+    </div>
+  	<script>
+  		$("#mainFrame").css("min-height",(windowHeight - 10) + "px");
+  	</script>  	
+</body>
+</html>
