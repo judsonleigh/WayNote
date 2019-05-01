@@ -62,6 +62,11 @@ class BookController extends Controller
                 }
                 $this->view->setVar('infoList', $infos['rowset']);
 
+                $commentList = $oModelBook->getComment(1);
+
+                if (empty($commentList) == false) {
+                    $this->view->setVar('commentList', $commentList['rowset']);
+                }
 
             }
         }

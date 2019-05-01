@@ -1,0 +1,123 @@
+<table id="dg" class="easyui-datagrid" style="width:100%; height: 100%;">
+</table>
+<script>
+    $('#dg').datagrid({
+        url:'/<?php echo $this->router->getModuleName(); ?>/comment/list',
+        toolbar:"#toolbar",
+        pagination:"true",
+        rownumbers: false,
+        fitColumns:"true",
+        singleSelect:"true",
+        pageSize:"20",
+        columns:[[
+            {field:'commentId',title:'编号',width:20,align:'center'},
+            {field:'bookName',title:'书籍',width:150},
+            {field:'realname',title:'昵称',width:100},
+            {field:'email',title:'Email',width:100},
+            {field:'ipAddr',title:'IP地址',width:100},
+            {field:'status',title:'状态',width:50,align:'center',formatter: function(value,row,index){
+                    if (value == 0){
+                        return '<font color="#9acd32">未审核</font>';
+                    } else if (value == 1){
+                        return '<font color="bule">通过</font>';
+                    } else if (value == -1){
+                        return '<font color="red">不通过</font>';
+                    }
+                }},
+            {field:'createTime',title:'创建时间',width:100,align:'center'},
+        ]]
+    });
+</script>
+<div id="toolbar">
+    <?php
+    if(\Application\Model\Admin::verifyAction($this, 'update')) {
+        ?>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="editInfo()">查看</a>
+        <?php
+    }
+    ?>
+</div>
+
+<div id="dlg" class="easyui-dialog" style="width:650px;height:500px;padding:10px 20px" closed="true" buttons="#dlg-buttons" data-options="modal:true">
+    <div class="ftitle">评论信息</div>
+    <form id="fm" method="post" novalidate enctype="multipart/form-data">
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="bookName" style="width:95%" data-options="label:'书籍:'" readonly>
+        </div>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="realname" style="width:95%" data-options="label:'昵称:'" readonly>
+        </div>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="email" style="width:95%" data-options="label:'Email:'" readonly>
+        </div>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="content" style="width:95%;height:120px" data-options="label:'评论内容:',multiline:true" readonly>
+        </div>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="ipAddr" style="width:95%" data-options="label:'IP地址:'" readonly>
+        </div>
+        <div style="margin-bottom:10px">
+            <input class="easyui-textbox" name="createTime" style="width:95%" data-options="label:'创建时间:'" readonly>
+        </div>
+        <div style="margin-bottom:10px">
+            <select name="status" class="easyui-combobox" data-options="label:'状态:',editable:false,panelHeight:'auto'" style="width:40%" readonly>
+                <option value="0">未审核</option>
+                <option value="1">通过</option>
+                <option value="-1">不通过</option>
+            </select>
+        </div>
+    </form>
+</div>
+
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="auditInfo(-1)">不通过</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="auditInfo(1)">通过</a>
+</div>
+<script type="text/javascript">
+    var url;
+    function editInfo(){
+        var row = $('#dg').datagrid('getSelected');
+        if (row){
+            $('#dlg').dialog('open').dialog('setTitle','编辑评论');
+            $('#fm').form('load',row);
+
+            url = '/<?php echo $this->router->getModuleName(); ?>/comment/audit/' + row.commentId;
+        } else {
+            $.messager.show({
+                title: '警告',
+                msg: '请选择要操作的评论！',
+                timeout: 2000,
+                showType: 'slide'
+            });
+        }
+    }
+    function auditInfo(auditStatus){
+        $.getJSON(url + '/' + auditStatus,function(result){
+            if (result.errorCode == 0) {
+                $('#dlg').dialog('close');      // close the dialog
+                $('#dg').datagrid('reload');    // reload the user data
+            }
+        });
+    }
+
+</script>
+<style type="text/css">
+    #fm{
+        margin:0;
+        padding:10px 30px;
+    }
+    .ftitle{
+        font-size:14px;
+        font-weight:bold;
+        padding:5px 0;
+        margin-bottom:10px;
+        border-bottom:1px solid #ccc;
+    }
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+</style>

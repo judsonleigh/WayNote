@@ -103,4 +103,51 @@ class Book extends \iwaycms\Base\Model {
         return $strInfoModel::fetchList( $pageLine, $pageNum, $order, $whereKeyword, $filter );
     }
 
+    /**
+     * 取书籍下评论列表
+     *
+     * @param int $status 状态 0.所有 1.审核通过
+     * @param int $pageLine OPTIONAL 分页行数
+     * @param int $pageNum OPTIONAL 当前页数
+     * @param Array $order OPTIONAL 排序条件
+     * 				$order[n]['field'] string 字段名
+     * 				$order[n]['desc'] bool 是否倒序
+     * @param String $whereKeyword OPTIONAL 查询条件
+     * @param Array $filter OPTIONAL 筛选条件
+     * 				$filter[n]['field'] string 字段名
+     * 				$filter[n]['value'] string 筛选值
+     * 				$filter[n]['method'] string 判断方法 ('='、'>'、'<'、'>='、'<='、'in')
+     * @return Array 内容查询结果
+     * 				$return['rowset']	array 结果集
+     * 				$return['countAll'] int 总计记录数
+     * 				$return['countNow'] int 当前页记录数
+     * 				$return['pageLine'] int 分页行数
+     * 				$return['pageNum'] int 当前页数
+     * 				$return['pageCount'] int 总页数
+     */
+    public function getComment($status, $pageLine = 0, $pageNum = 1, $order = null, $whereKeyword = null, $filter = null) {
+        $strInfoModel = self::_NAMESPACE . 'Comment';
+
+        $status = intval($status);
+
+        $filter[] = array(
+            'field' => 'bookId',
+            'value' => $this->bookId,
+            'method' => '=',
+        );
+        if ($status == 1) {
+            $filter[] = array(
+                'field' => 'status',
+                'value' => 1,
+                'method' => '=',
+            );
+        }
+        $filter[] = array(
+            'field' => 'isDel',
+            'value' => 0,
+            'method' => '=',
+        );
+
+        return $strInfoModel::fetchList( $pageLine, $pageNum, $order, $whereKeyword, $filter );
+    }
 }
