@@ -80,6 +80,13 @@
 					<controller>info</controller>
 					<action>index</action>
 				</info>
+				<comment>
+					<label>评论</label>
+					<route>default</route>
+					<module>management-platform</module>
+					<controller>comment</controller>
+					<action>index</action>
+				</comment>
 			</pages>
 		</note>
 	</navigation>
