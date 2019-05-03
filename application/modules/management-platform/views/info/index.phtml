@@ -58,6 +58,17 @@
                 <?php
             }
             ?>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            类型：<input id="ectype" class="easyui-combobox" name="ectype" style="width:150px" data-options="
+                    valueField: 'id',
+                    textField: 'text',
+                    editable:false,
+                    panelHeight:'auto'
+                    ">
+            &nbsp;&nbsp;
+            名称：<input class="easyui-textbox" style="width:110px" id="keyword">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="findSubmit();">查询</a>
         </div>
     </div>
     <div id="dlg" class="easyui-window" style="padding:10px 20px;width:800px;height:350px" closed="true" buttons="#dlg-buttons" resizable="true" data-options="modal:true,closed:true,iconCls:'icon-save',minimizable: false, collapsible:false">
@@ -89,6 +100,28 @@
         var bookId = 0;
         var BookName = 0;
 
+        function findSubmit(){
+            //alert($('#ectype').val());
+            //alert($('#keyword').val());
+
+            nowUrl = '/<?php echo $this->router->getModuleName(); ?>/info/list/' + bookId;
+            nowWhere = '';
+            if ($('#ectype').val() != '') {
+                nowWhere = '?type=' + $('#ectype').val();
+            }
+            if ($('#keyword').val() != '') {
+                if (nowWhere == '') {
+                    nowWhere = '?';
+                } else {
+                    nowWhere += '&';
+                }
+                nowWhere += 'keyword=' + $('#keyword').val();
+            }
+            $('#dg').datagrid({
+                url: nowUrl + nowWhere
+            });
+        }
+
         function showInfo(index, row){
             bookId = row.value;
             BookName = row.text;
@@ -96,6 +129,8 @@
             $('#dg').datagrid({
                 url:'/<?php echo $this->router->getModuleName(); ?>/info/list/' + bookId
             });
+            $('#ectype').combobox('setValue', '');
+            $('#ectype').combobox('reload', '/<?php echo $this->router->getModuleName(); ?>/info/getBookType/' + bookId);
         }
 
 
@@ -181,4 +216,4 @@
             width:45px;
         }
     </style>
-    <div>
+<div>

@@ -42,13 +42,32 @@ class InfoController extends Controller
     }
     
     /**
-     * AJAX提交--获取内容列表
+     * AJAX提交--获取知识点列表
      * 
-     * @param int $_GET['cid'] 频道编号
+     * @param int $_GET['bookId'] 书籍编号
+     * @param int $_POST['page'] 当前页数
+     * @param int $_POST['rows'] 每页记录数
+     * @param int $_GET['type'] 类型
+     * @param int $_GET['keyword'] 关键词
+     * @return string JSON
+     * @example {"rows":"(当前页记录数组)","total":"(总记录数)"}
+     *
      */
     public function listAction($bookId = 0)
     {
         $this->view->disable();
+
+        $page = intval($this->request->getPost('page', null, 1));
+        if ($page <= 0) {
+            $page = 1;
+        }
+        $rows = intval($this->request->getPost('rows', null, 20));
+        if ($rows <= 0) {
+            $rows = 20;
+        }
+
+        $type = trim($this->request->get('type', null, ''));
+        $keyword = trim($this->request->get('keyword', null, ''));
 
         $returnJson = array();
         $returnJson['errorCode'] = 0;
@@ -57,11 +76,33 @@ class InfoController extends Controller
 
         try {
             if ($bookId > 0) {
-                //内容存在
+                //书籍存在
                 $oModelBook = \Application\Model\Book::fetchById($bookId);
 
-                $arrayContentList = $oModelBook->getInfo(0, 1, null, null, null);
+                $filter = array();
+                $filter[] = array(
+                    'field' => 'isDel',
+                    'value' => '0',
+                    'method' => '=',
+                );
 
+                if (empty($type) == false) {
+                    $filter[] = array(
+                        'field' => 'type',
+                        'value' => $type,
+                        'method' => '=',
+                    );
+                }
+
+                if (empty($keyword) == false) {
+                    $filter[] = array(
+                        'field' => 'title',
+                        'value' => '%' . $keyword . '%',
+                        'method' => 'like',
+                    );
+                }
+
+                $arrayContentList = $oModelBook->getInfo($rows, $page, null, null, $filter);
 
 
                 $arrayJson = array(
@@ -76,7 +117,7 @@ class InfoController extends Controller
                 }
 
             } else {
-                //内容不存在
+                //书籍不存在
                 $arrayJson = array(
                     'total' => 0,
                     'rows' => array(),
@@ -92,10 +133,67 @@ class InfoController extends Controller
     }
 
     /**
-     * AJAX提交--添加内容
+     * AJAX提交--获取书籍类型
      *
-     * @param Array $_POST 内容信息
-     * @param int $_GET['fid'] 父内容编号	(为空添加根内容)
+     * @param int $_GET['bookId'] 书籍编号
+     * @return string JSON
+     * @example {"rows":"(当前页记录数组)","total":"(总记录数)"}
+     *
+     */
+    public function getBookTypeAction($bookId = 0)
+    {
+        $this->view->disable();
+
+        $bookId = intval($bookId);
+
+        $typeList[] = [
+            'id' => '',
+            'text' => '全部',
+        ];
+
+        try {
+            if ($bookId > 0) {
+                //书籍存在
+                $oModelBook = \Application\Model\Book::fetchById($bookId);
+
+                $filter = array();
+                $filter[] = array(
+                    'field' => 'isDel',
+                    'value' => '0',
+                    'method' => '=',
+                );
+
+                $contentListAll = $oModelBook->getInfo(0, 1, null, null, $filter);
+
+                if ($contentListAll['countAll'] > 0) {
+                    $types = [];
+                    foreach($contentListAll['rowset'] as $row) {
+                        $types[$row['type']] = $row['type'];
+                    }
+
+                    foreach($types as $nowType) {
+                        $typeList[] = [
+                            'id' => $nowType,
+                            'text' => $nowType,
+                        ];
+                    }
+                }
+
+            }
+        } catch (Exception $e) {
+            $returnJson['errorCode'] = $e->getCode();
+            $returnJson['errorSerialNumber'] = $e->getSerialNumber();
+            $returnJson['errorMsg'] = $e->getMessage();
+        }
+
+        echo json_encode($typeList);
+    }
+
+    /**
+     * AJAX提交--添加知识点
+     *
+     * @param Array $_POST 知识点信息
+     * @param int $_GET['fid'] 父知识点编号	(为空添加根知识点)
      * @return string JSON
      * @example {"errorMsg":"(错误提示)"}
      */
@@ -119,10 +217,10 @@ class InfoController extends Controller
     }
 
     /**
-     * AJAX--修改内容信息
+     * AJAX--修改知识点信息
      *
-     * @param Array $_POST 内容信息
-     * @param int $_GET['id'] 内容编号
+     * @param Array $_POST 知识点信息
+     * @param int $_GET['id'] 知识点编号
      * @return string JSON
      * @example {"errorMsg":"(错误提示)"}
      */
@@ -149,9 +247,9 @@ class InfoController extends Controller
     }
 
     /**
-     * AJAX--删除内容信息
+     * AJAX--删除知识点信息
      *
-     * @param int $_POST['id'] 内容编号
+     * @param int $_POST['id'] 知识点编号
      * @return string JSON
      * @example {"errorMsg":"(错误提示)","success":"(是否成功)"}
      *

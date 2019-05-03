@@ -460,6 +460,8 @@ class Admin extends \iwaycms\Base\Model {
         }
 
         $dbTableClass =  self::_NAMESPACE . 'DbTable\\' . self::_DEFAULT_CLASSNAME;
+        $mapperClass =  self::_NAMESPACE . 'Mappers\\' . self::_DEFAULT_CLASSNAME;
+
 
         //生成加密后的密码
         $password = self::encryptionPassword($password);
@@ -468,13 +470,15 @@ class Admin extends \iwaycms\Base\Model {
 
         $db = $dbTable->getAdapter();
 
-        $where = $db->quoteInto('username = ?', $username)
-            . $db->quoteInto(' AND password = ?', $password);
+        $where = $db->quoteInto($mapperClass::COLS_MAP['username'] . ' = ?', $username)
+            . $db->quoteInto(' AND ' . $mapperClass::COLS_MAP['password'] . ' = ?', $password)
+            . ' AND ' . $mapperClass::COLS_MAP['status'] . ' = 1'
+            . ' AND ' . $mapperClass::COLS_MAP['isDel'] . ' = 0';
 
         $row = $dbTable->fetchRow($where);
 
         if ($row === false) {
-            $messages = $this->getMessages();
+            $messages = $dbTable->getMessages();
             $errorInfo = array();
             foreach ($messages as $message) {
                 $errorInfo[] = array(
