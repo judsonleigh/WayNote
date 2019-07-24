@@ -71,7 +71,7 @@
             <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="findSubmit();">查询</a>
         </div>
     </div>
-    <div id="dlg" class="easyui-window" style="padding:10px 20px;width:800px;height:350px" closed="true" buttons="#dlg-buttons" resizable="true" data-options="modal:true,closed:true,iconCls:'icon-save',minimizable: false, collapsible:false">
+    <div id="dlg" class="easyui-window" style="padding:10px 20px;width:1050px;height:500px" closed="true" buttons="#dlg-buttons" resizable="true" data-options="modal:true,closed:true,iconCls:'icon-save',minimizable: false, collapsible:false">
         <div class="ftitle">知识点信息</div>
         <form id="fm" method="post" novalidate>
             <input name="bookId" type="hidden" id="bookId">
@@ -83,7 +83,7 @@
                 <input class="easyui-textbox" name="title" style="width:95%" data-options="label:'知识点名称:',required:true,validType:'length[2,255]'">
             </div>
             <div style="margin-bottom:10px">
-                <input class="easyui-textbox" name="introduce" style="width:95%;height:70px" data-options="label:'描述:',validType:'length[0,1800]',multiline:true">
+                <input class="easyui-textbox" name="introduce" style="width:95%;height:200px" data-options="label:'描述:',validType:'length[0,1800]',multiline:true">
             </div>
             <div style="margin-bottom:10px">
                 <input class="easyui-textbox" name="url" style="width:95%" data-options="label:'链接:',validType:'url'">

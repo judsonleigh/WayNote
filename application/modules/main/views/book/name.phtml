@@ -122,7 +122,11 @@ if (empty($oBook->pic) == false) {
             <td>
                 <h6><?php echo $row['title'] ?></h6>
             </td>
-            <td><?php echo nl2br($row['introduce']) ?></td>
+            <td><?php
+                $nowIntroduce = str_replace('  ',' &nbsp&nbsp&nbsp',$row['introduce']);
+                $nowIntroduce = str_replace('\\\\','\\',$nowIntroduce);
+                echo nl2br($nowIntroduce);
+                ?></td>
             <td>
                 <?php
                 if (empty($row['url']) == false) {
@@ -150,7 +154,7 @@ if (empty($oBook->pic) == false) {
                     foreach ($typeList as $nowType) {
                         ?>
                     <a class="d-table ml-auto mr-auto mt-4"
-                       href="/book/name/<?php echo $oBook->bookKey; ?>/<?php echo $nowType; ?>">
+                       href="/<?php echo $oBook->bookKey; ?>/<?php echo $nowType; ?>">
                         <button type="button" class="btn btn-info btn-squared"><?php echo $nowType; ?></button>
                     </a>
                         <?php
@@ -279,7 +283,7 @@ if (empty($oBook->pic) == false) {
                     </div>
                 </div>
                 <a class="d-table ml-auto mr-auto mt-4" target="<?php echo $row['bookKey'] ?>"
-                   href="/book/name/<?php echo $row['bookKey'] ?>">
+                   href="/<?php echo $row['bookKey'] ?>">
                     <button class="btn btn-success btn-pill">查看笔记</button>
                 </a>
             </div>
@@ -322,7 +326,7 @@ if (empty($oBook->pic) == false) {
 <script>
     function changeType() {
         nowInfoType = $('#infoType').val();
-        url = '/book/name/<?php echo $oBook->bookKey; ?>'
+        url = '/<?php echo $oBook->bookKey; ?>'
         if (nowInfoType != '') {
             url += '/' + nowInfoType;
         }

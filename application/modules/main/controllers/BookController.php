@@ -12,11 +12,13 @@ class BookController extends Controller
 
     public function indexAction()
     {
-        header('Location: /book/name/');
+        header('Location: /');
     }
 
 	public function nameAction($bookKey = '', $infoType = '')
     {
+
+
         $bookKey = trim($bookKey);
         $infoType = trim($infoType);
         $filter = [
@@ -106,7 +108,7 @@ class BookController extends Controller
             foreach ($result['rowset'] as $nowBook) {
                 $oBook = \Application\Model\Book::fetchById($nowBook['bookId']);
                 if (empty($oBook) == false) {
-                    $nowUrl['url'] = '/book/name/' .  $oBook->bookKey;
+                    $nowUrl['url'] = '/' .  $oBook->bookKey;
                     $nowUrl['time'] = strtotime($oBook->createTime);
                     $urlList[] = $nowUrl;
 
@@ -118,7 +120,7 @@ class BookController extends Controller
                             $typeList[md5($info['type'])] = $info['type'];
                         }
                         foreach ($typeList as $nowType) {
-                            $nowUrl['url'] = '/book/name/' .  $oBook->bookKey . '/' . $nowType;
+                            $nowUrl['url'] = '/' .  $oBook->bookKey . '/' . $nowType;
                             $nowUrl['time'] = strtotime($oBook->createTime);
                             $urlList[] = $nowUrl;
 
