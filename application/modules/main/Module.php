@@ -50,10 +50,6 @@ class Module implements ModuleDefinitionInterface
                         // Handle 404 exceptions
                         if ($exception instanceof DispatchException) {
 
-                            //var_dump($dispatcher->getControllerName());
-                            //var_dump($dispatcher->getActionName());
-                            //exit;
-
                             $dispatcher->forward(
                                 [
                                     'controller' => 'book',

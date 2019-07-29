@@ -1,4 +1,6 @@
 <?php
+use Phalcon\Dispatcher;
+use Phalcon\Events\Event;
 use Phalcon\Loader;
 use Phalcon\Mvc\Application;
 use Phalcon\Mvc\Router;
@@ -161,53 +163,6 @@ try {
             'action' => 2,
             'params' => 3,
         ));
-        //英文模块
-        $router->add("/en", array(
-            'module'     => "en",
-            'controller' => "index",
-            'action' => "index",
-        ));
-
-        $router->add("/en/", array(
-            'module'     => "en",
-            'controller' => "index",
-            'action' => "index",
-        ));
-
-        $router->add("/en/:controller", array(
-            'module'     => "en",
-            'controller' => 1,
-            'action' => "index",
-        ));
-        $router->add("/en/:controller/", array(
-            'module'     => "en",
-            'controller' => 1,
-            'action' => "index",
-        ));
-
-        $router->add("/en/:controller/:action", array(
-            'module'     => "en",
-            'controller' => 1,
-            'action' => 2,
-        ));
-        $router->add("/en/:controller/:action/", array(
-            'module'     => "en",
-            'controller' => 1,
-            'action' => 2,
-        ));
-
-        $router->add("/en/:controller/:action/:params", array(
-            'module'     => "en",
-            'controller' => 1,
-            'action' => 2,
-            'params' => 3,
-        ));
-        $router->add("/en/:controller/:action/:params/", array(
-            'module'     => "en",
-            'controller' => 1,
-            'action' => 2,
-            'params' => 3,
-        ));
 
 
         $router->setDefaultModule("main");
@@ -231,10 +186,6 @@ try {
                 "className" => "Modules\\ManagementPlatform\\Module",
                 "path"      => "../application/modules/management-platform/Module.php",
             ],
-            "en"  => [
-                "className" => "Modules\\En\\Module",
-                "path"      => "../application/modules/en/Module.php",
-    ]
         ]
     );
 

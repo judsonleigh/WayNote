@@ -21,6 +21,9 @@ class BookController extends Controller
 
         $bookKey = trim($bookKey);
         $infoType = trim($infoType);
+
+        if ($infoType == 'index')
+            $infoType = '';
         $filter = [
             [
                 'field' => 'isDel',
