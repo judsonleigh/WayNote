@@ -30,6 +30,7 @@
                 <th data-options="field:'title',width:300">知识点名称</th>
                 <th data-options="field:'introduce',width:300">描述</th>
                 <th data-options="field:'url',width:300">连接</th>
+                <th data-options="field:'pic',width:300" hidden>图片链接</th>
                 <th data-options="field:'createTime',width:130,align:'center'">创建时间</th>
             </tr>
             </thead>
@@ -83,7 +84,18 @@
                 <input class="easyui-textbox" name="title" style="width:95%" data-options="label:'知识点名称:',required:true,validType:'length[2,255]'">
             </div>
             <div style="margin-bottom:10px">
-                <input class="easyui-textbox" name="introduce" style="width:95%;height:200px" data-options="label:'描述:',validType:'length[0,1800]',multiline:true">
+                <label>描述:</label>
+                <div class="fitem">
+                    <div style="height:5px"></div>
+                    <script charset="utf-8" src="/plugin/ckeditor/ckeditor.js"></script>
+                    <script charset="utf-8" src="/plugin/ckeditor/config.js"></script>
+                    <textarea class="ckeditor" id="introduce" name="introduce" style="width:800px;height:300px;"></textarea>
+                </div>
+                <!--<input class="easyui-textbox" name="introduce" style="width:95%;height:70px" data-options="label:'描述:',validType:'length[0,1800]',multiline:true">-->
+            </div>
+            <div style="margin-bottom:10px">
+                <input class="easyui-filebox" name="picFile" data-options="label:'图片:',prompt:'选择图片...',buttonText:'选择图片',accept:'image/gif,image/jpeg,image/jpg,image/png'" style="width:90%">
+                <a href="#" id="picImg" class="easyui-linkbutton" data-options="iconCls:'icon-large-picture',size:'small',iconAlign:'top',disabled:true"></a>
             </div>
             <div style="margin-bottom:10px">
                 <input class="easyui-textbox" name="url" style="width:95%" data-options="label:'链接:',validType:'url'">
@@ -144,6 +156,11 @@
             }
             $('#dlg').dialog('open').dialog('setTitle','添加知识点');
             $('#fm').form('clear');
+
+            $('#picImg').linkbutton('disable').off("click");
+
+            CKEDITOR.instances.introduce.setData('');
+
             url = '/<?php echo $this->router->getModuleName(); ?>/info/insert';
 
         }
@@ -153,6 +170,19 @@
                 $('#dlg').dialog('open').dialog('setTitle','修改知识点');
                 $('#fm').form('clear');
                 $('#fm').form('load',row);
+                $('#picImg').off("click");
+
+                CKEDITOR.instances.introduce.setData(row.introduce);
+
+                if(row.pic != '' && row.pic != null){
+                    $('#picImg').linkbutton('enable')
+                        .click(function () {
+                            var newwin=window.open();
+                            newwin.document.write("<img src="+row.pic+" />");
+                        });
+                } else {
+                    $('#picImg').linkbutton('disable');
+                }
 
                 url = '/<?php echo $this->router->getModuleName(); ?>/info/update/'+row.infoId;
 
