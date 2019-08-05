@@ -15,6 +15,21 @@ CKEDITOR.editorConfig = function( config ) {
     // config.language = 'fr';
     // config.uiColor = '#AADC6E';
 
+    config.toolbar = 'Full';
+    config.toolbar = [
+        ['Source','-','Templates'],
+        ['Print', 'SpellChecker', 'Scayt'],
+        ['Replace','-','RemoveFormat'],
+        ['Styles','Format','Font','FontSize'],
+        ['TextColor','BGColor'],
+        '/',
+        ['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
+        ['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+        ['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+        ['Link','Unlink','Anchor'],
+        ['Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak']
+    ];
+
     config.filebrowserUploadUrl="/management-platform/file/uploadCk/";
 
     config.removeDialogTabs = 'image:advanced;link:advanced';

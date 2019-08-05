@@ -36,6 +36,7 @@ class Info extends \iwaycms\Base\Mappers
 			'type' => 'type',
 			'title' => 'title',
 			'introduce' => 'introduce',
+            'pic' => 'pic',
             'url' => 'url',
             'isDel' => 'is_del',
 			'createTime' => 'create_time',
