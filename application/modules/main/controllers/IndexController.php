@@ -15,6 +15,8 @@ class IndexController extends Controller
 
 	public function indexAction()
     {
+        //header('Location: /book/home/');
+        //test
         header('Location: /book/name/');
     }
 }
