@@ -29,6 +29,7 @@ class Info extends \iwaycms\Base\Model {
         'type',
         'title',
         'introduce',
+        'pic',
         'url',
         'isDel',
         'createTime',
