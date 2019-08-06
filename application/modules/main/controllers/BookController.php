@@ -160,6 +160,8 @@ class BookController extends Controller
 
     public function sitemapAction()
     {
+        $this->view->cleanTemplateAfter();
+
         header('Content-Type: text/xml');//这行很重要，php默认输出text/html格式的文件，所以这里明确告诉浏览器输出的格式为xml,不然浏览器显示不出xml的格式
 
         $filter = [
@@ -198,6 +200,24 @@ class BookController extends Controller
                 }
             }
         }
+
+        $filter = [
+            [
+                'field' => 'isDel',
+                'method' => '=',
+                'value' => '0',
+            ],
+        ];
+        $infoList = \Application\Model\Info::fetchList(0, 1, null, null, $filter);
+
+        if ($infoList['countAll'] > 0) {
+            foreach ($infoList['rowset'] as $nowInfo) {
+                $nowUrl['url'] = '/book/info/' .  $nowInfo['infoId'];
+                $nowUrl['time'] = strtotime($oBook->createTime);
+                $urlList[] = $nowUrl;
+            }
+        }
+
         $this->view->setVar('urlList', $urlList);
 
     }
