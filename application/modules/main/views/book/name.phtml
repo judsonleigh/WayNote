@@ -17,7 +17,14 @@
 
         <div class="ten columns centered">
             <div style="padding-top: 20px"></div>
-            <h2 style="color: white; padding-bottom: 30px">《<?php echo $oBook->bookName; ?>》笔记</h2>
+            <h2 style="color: white; padding-bottom: 30px">《<?php echo $oBook->bookName; ?>》笔记
+                <?php
+                    if (empty($infoType) == false) {
+                        echo '—' . $infoType;
+                    }
+                ?>
+            </h2>
+
             <?php
             if (empty($oBook->bookSubname) == false) {
                 ?>
@@ -222,7 +229,11 @@
                     </div>
                 </div>
 
-                <div class="widget widget_categories">
+                <div style="text-align:center" id="ads">
+                    <?php echo \Application\Model\Config::getValueByMark('ads4');?>
+                </div>
+
+                <div class="widget widget_categories" style="margin-top: 20px">
                     <h5 class="widget-title">其他书籍</h5>
                     <ul class="link-list cf">
                         <?php
@@ -241,6 +252,10 @@
 
         </div>
 
+    </div>
+
+    <div style="text-align:center" id="ads">
+        <?php echo \Application\Model\Config::getValueByMark('ads3');?>
     </div>
 
 </div>

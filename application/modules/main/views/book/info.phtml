@@ -204,7 +204,11 @@
                     </div>
                 </div>
 
-                <div class="widget widget_categories">
+                <div style="text-align:center" id="ads">
+                    <?php echo \Application\Model\Config::getValueByMark('ads4');?>
+                </div>
+
+                <div class="widget widget_categories" style="margin-top: 20px">
                     <h5 class="widget-title">其他书籍</h5>
                     <ul class="link-list cf">
                         <?php
@@ -223,6 +227,11 @@
 
         </div>
 
+    </div>
+
+
+    <div style="text-align:center" id="ads">
+        <?php echo \Application\Model\Config::getValueByMark('ads3');?>
     </div>
 
 </div>

@@ -21,12 +21,12 @@
         echo $oBook->bookName . ' ' . $oBook->bookSubname . ' 笔记 ' . $oBook->bookKey . ' ' . $oBook->author;
         if (empty($infoList) == false) {
             foreach ($infoList as $row) {
-                echo ' ' . $row['title'];
+                echo '、' . $row['title'];
             }
         }
         if (empty($typeList) == false) {
             foreach ($typeList as $nowType) {
-                echo ' ' . $nowType;
+                echo '、' . $nowType;
             }
         }
     }
@@ -124,10 +124,6 @@
 </header>
 
 <?php echo $this->getContent(); ?>
-
-<div style="text-align:center" id="ads">
-    <?php echo \Application\Model\Config::getValueByMark('ads3');?>
-</div>
 
 <footer style="margin-top: 30px; margin-bottom: 30px;">
 
