@@ -1,14 +1,9 @@
 <!DOCTYPE html>
-<!--[if lt IE 8 ]>
-<html class="no-js ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]>
-<html class="no-js ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 8)|!(IE)]><!-->
-<html class="no-js" lang="en"> <!--<![endif]-->
+<html class="no-js ie ie7" lang="en">
+<html class="no-js ie ie8" lang="en">
+<html class="no-js" lang="en">
 <head>
 
-    <!--- Basic Page Needs
-    ================================================== -->
     <meta charset="utf-8">
     <title><?php
         if (empty($oBook) == false) {
@@ -43,31 +38,21 @@
     ?>">
     <meta name="author" content="">
 
-    <!-- Mobile Specific Metas
-    ================================================== -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!-- CSS
-    ================================================== -->
     <link rel="stylesheet" href="/css/default.css">
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/media-queries.css">
 
 
-    <!-- Script
-    ================================================== -->
     <script src="/js/modernizr.js"></script>
 
-    <!-- Favicons
-     ================================================== -->
     <link rel="shortcut icon" href="/images/favicon.ico">
 
 </head>
 
 <body>
 
-<!-- Header
-================================================== -->
 <header>
 
     <div class="row">
@@ -122,15 +107,15 @@
                     }
                     ?>
 
-                </ul> <!-- end #nav -->
+                </ul>
 
-            </nav> <!-- end #nav-wrap -->
+            </nav>
 
         </div>
 
     </div>
 
-</header> <!-- Header End -->
+</header>
 
 <?php echo $this->getContent(); ?>
 
@@ -138,8 +123,6 @@
     <?php echo \Application\Model\Config::getValueByMark('ads2');?>
 </div>
 
-<!-- footer
-================================================== -->
 <footer style="margin-top: 30px; margin-bottom: 30px;">
 
     <div class="row">
@@ -169,14 +152,10 @@
 
     </div>
 
-</footer> <!-- Footer End-->
+</footer>
 
-<!-- Java Script
-================================================== -->
-<!--<script src="https://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>-->
 <script src="/js/jquery/jquery-3.1.1.min.js"></script>
-<!--<script>window.jQuery || document.write('<script src="/js/jquery-1.10.2.min.js"><\/script>')</script>-->
-<script>window.jQuery || document.write('<script src="/js/jquery-3.2.1.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="/js/jquery/jquery-3.2.1.min.js"><\/script>')</script>
 <script type="text/javascript" src="/js/jquery/jquery-migrate-1.2.1.min.js"></script>
 
 <script src="/js/jquery/jquery.flexslider.js"></script>
