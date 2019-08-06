@@ -44,6 +44,12 @@
     <link rel="stylesheet" href="/css/layout.css">
     <link rel="stylesheet" href="/css/media-queries.css">
 
+    <style>
+        ins{
+            background-color: transparent;
+        }
+    </style>
+
 
     <script src="/js/modernizr.js"></script>
 
@@ -119,8 +125,8 @@
 
 <?php echo $this->getContent(); ?>
 
-<div style="text-align:center">
-    <?php echo \Application\Model\Config::getValueByMark('ads2');?>
+<div style="text-align:center" id="ads">
+    <?php echo \Application\Model\Config::getValueByMark('ads3');?>
 </div>
 
 <footer style="margin-top: 30px; margin-bottom: 30px;">
@@ -139,11 +145,10 @@
                 <?php
             }
             ?>
-            <div class="social d-table mx-auto">
-                <?php echo str_replace('\\\\','\\',\Application\Model\Config::getValueByMark('statistics'));?>
-            </div>
 
-            <p class="text-muted text-center small p-0 mb-4"><?php echo \Application\Model\Config::getValueByMark('copyright');?>
+            <p class="text-muted text-center small p-0 mb-4">
+                <?php echo \Application\Model\Config::getValueByMark('copyright');?> |
+                <?php echo str_replace('\\\\','\\',\Application\Model\Config::getValueByMark('statistics'));?>
             </p>
 
         </div>
