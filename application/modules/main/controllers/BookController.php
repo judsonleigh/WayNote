@@ -116,6 +116,13 @@ class BookController extends Controller
      */
     public function infoAction($infoId = '')
     {
+        // 判空
+        if(empty($infoId)){
+            // 跳首页
+            header('Location: /');
+            return;
+        }
+
         // 知识点
         $info = \Application\Model\Info::fetchById(intval($infoId));
 
