@@ -17,7 +17,14 @@
 
         <div class="ten columns centered">
             <div style="padding-top: 20px"></div>
-            <h2 style="color: white; padding-bottom: 30px">《<?php echo $oBook->bookName; ?>》笔记</h2>
+            <h2 style="color: white; padding-bottom: 30px">《<?php echo $oBook->bookName; ?>》笔记
+                <?php
+                    if (empty($infoType) == false) {
+                        echo '—' . $infoType;
+                    }
+                ?>
+            </h2>
+
             <?php
             if (empty($oBook->bookSubname) == false) {
                 ?>
