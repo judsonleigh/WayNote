@@ -1,0 +1,69 @@
+
+
+<!-- Page Title
+================================================== -->
+<div id="page-title">
+
+    <div class="row">
+
+        <div class="ten columns centered text-center">
+            <h1 style="letter-spacing:25px">书籍清单</h1>
+        </div>
+
+    </div>
+
+</div> <!-- Page Title End-->
+
+<!-- Works Section
+================================================== -->
+<section id="works">
+
+    <div class="row">
+
+        <div style="text-align:center">
+            <?php echo \Application\Model\Config::getValueByMark('ads1');?>
+        </div>
+
+        <div id="portfolio-wrapper" class="bgrid-quarters s-bgrid-halves">
+
+
+        <?php
+            if(!empty($bookDetails)){
+                foreach ($bookDetails as $book){
+        ?>
+            <div class="columns portfolio-item">
+                <div class="item-wrap">
+                    <a href="/<?php echo $book['bookKey'] ?>">
+
+                    <?php
+                    if (empty($book['pic']) == false) {
+                        ?>
+                        <img alt="<?php echo $book['bookName'] ?>" src="<?php echo $book['pic'] ?>" style="height: 350px; width: 300px">
+                        <?php
+                    } else {
+                        ?>
+                        <img alt="<?php echo $book['bookName'] ?>" src="/images/management-platform/logo.png" style="height: 350px; width: 300px">
+                        <?php
+                    }
+                    ?>
+
+                        <div class="overlay"></div>
+                        <div class="link-icon"><i class="fa fa-link"></i></div>
+                    </a>
+                    <div class="portfolio-item-meta">
+                        <h5><a href="/<?php echo $book['bookKey'] ?>"><?php echo $book['bookName'] ?></a></h5>
+                        <p><?php echo $book['bookName'] ?></p>
+                    </div>
+                </div>
+            </div>
+
+        <?php
+                }
+            }
+        ?>
+
+        </div>
+
+    </div>
+
+</section> <!-- Works Section End-->

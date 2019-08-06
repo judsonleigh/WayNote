@@ -110,7 +110,12 @@ class InfoController extends Controller
                 );
                 if ($arrayContentList['countNow'] > 0) {
                     //当前页有数据
-                    $arrayJson['rows'] = $arrayContentList['rowset'];
+                    $returnRowset = array();
+                    foreach ($arrayContentList['rowset'] as $row){
+                        $row['introduce'] = htmlspecialchars_decode($row['introduce'], ENT_QUOTES);
+                        $returnRowset[] = $row;
+                    }
+                    $arrayJson['rows'] = $returnRowset;
                 } else {
                     //当前页无数据
                     $arrayJson['rows'] = array();
@@ -206,6 +211,17 @@ class InfoController extends Controller
 
         try {
             $info = $this->request->getPost();
+
+            //图片上传
+            if (isset($_FILES['picFile']) && is_array($_FILES['picFile']) && trim($_FILES['picFile']['name']) != '') {
+                $oFileMapper = new \Application\Model\Mappers\File();
+                $nowFileId = \Application\Model\File::upFileLoad($_FILES['picFile']);
+                $oFileModel = \Application\Model\File::fetchById($nowFileId);
+                $info['pic'] = $oFileModel->getFileUrl();
+            }
+
+            $info['introduce'] = htmlspecialchars($info['introduce'], ENT_QUOTES);
+
             \Application\Model\Info::insert($info);
         } catch (Exception $e) {
             $returnJson['errorCode'] = $e->getCode();
@@ -236,6 +252,17 @@ class InfoController extends Controller
 
         try {
             $oNowModel = \Application\Model\Info::fetchById($id);
+
+            //图片上传
+            if (isset($_FILES['picFile']) && is_array($_FILES['picFile']) && trim($_FILES['picFile']['name']) != '') {
+                $oFileMapper = new \Application\Model\Mappers\File();
+                $nowFileId = \Application\Model\File::upFileLoad($_FILES['picFile']);
+                $oFileModel = \Application\Model\File::fetchById($nowFileId);
+                $info['pic'] = $oFileModel->getFileUrl();
+            }
+
+            $info['introduce'] = htmlspecialchars($info['introduce'], ENT_QUOTES);
+
             $oNowModel->update($info);
         } catch (Exception $e) {
             $returnJson['errorCode'] = $e->getCode();

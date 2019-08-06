@@ -53,8 +53,7 @@
         <div id="primary" class="eight columns">
 
         <?php
-            if (!empty($infoList)) {
-                foreach ($infoList as $row) {
+            if (!empty($info)) {
         ?>
 
             <article class="post">
@@ -62,69 +61,55 @@
                 <div class="entry-header cf">
 
                     <!-- 知识点 -->
-                    <h1><a href="/book/info/<?php echo $row['infoId'] ?>"><?php echo $row['title'] ?></a></h1>
+                    <h1><?php echo $info->title; ?></h1>
 
                     <!-- 类型 -->
-                    <h5 class="widget-title"><?php echo $row['type'] ?></h5>
+                    <h5 class="widget-title"><?php echo $info->type; ?></h5>
 
                 </div>
 
                 <!-- 大图 -->
                 <div class="post-thumb">
 
-                <?php
-                    if(!empty($row['pic'])){
-                ?>
-                        <a href="/book/info/<?php echo $row['infoId'] ?>">
-                            <img src="<?php echo $row['pic']; ?>" alt="post-image" title="post-image" width="300px">
-                        </a>
-                <?php
+                    <?php
+                    if(!empty($info->pic)){
+                        ?>
+                        <img src="<?php echo $info->pic; ?>" alt="post-image" title="post-image">
+                        <?php
                     }
-                ?>
+                    ?>
 
                 </div>
 
                 <!-- 内容 -->
                 <div class="post-content">
 
-                    <p>
-                        <?php
-                            $introduce = htmlspecialchars_decode($row['introduce'], ENT_QUOTES);
-
-                            $lineArray = explode("</p>",$introduce);
-
-                            if(count($lineArray) > 3){
-                                for ($i = 0; $i < 3; $i++){
-                                    echo $lineArray[$i];
-                                }
-                                echo '<p>......</p>';
-                            } else {
-                                echo $introduce;
-                            }
-                        ?>
-                    </p>
+                    <?php
+                        echo htmlspecialchars_decode($info->introduce, ENT_QUOTES);
+                    ?>
 
                 </div>
 
             </article> <!-- post end -->
-                <?php
-                }
+        <?php
             }
-            ?>
+        ?>
+
+
 
             <!-- Comments
             ================================================== -->
             <div id="comments">
 
-            <?php
+                <?php
                 if (!empty($commentList)) {
-            ?>
-                <h3><?php echo count($commentList); ?> 条评论</h3>
+                    ?>
+                    <h3><?php echo count($commentList); ?> 条评论</h3>
 
-                <!-- commentlist -->
-                <ol class="commentlist" style="margin-left: 20px">
+                    <!-- commentlist -->
+                    <ol class="commentlist" style="margin-left: 20px">
 
-                    <?php
+                        <?php
                         foreach ($commentList as $row) {
                             ?>
 
@@ -145,12 +130,12 @@
                             </li>
                             <?php
                         }
-                    ?>
+                        ?>
 
-                </ol>
+                    </ol>
 
-                <?php
-                    }
+                    <?php
+                }
                 ?>
 
 
@@ -227,9 +212,9 @@
                         <?php
                         if(!empty($bookList)){
                             foreach ($bookList as $book) {
-                        ?>
-                            <li><a href="/<?php echo $book['bookKey'] ?>"><?php echo $book['bookName'] ?></a></li>
-                        <?php
+                                ?>
+                                <li><a href="/<?php echo $book['bookKey'] ?>"><?php echo $book['bookName'] ?></a></li>
+                                <?php
                             }
                         }
                         ?>

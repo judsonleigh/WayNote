@@ -7,6 +7,35 @@ class BookController extends Controller
 {
     public function initialize()
     {
+        $this->view->setTemplateAfter('default');
+
+        // 书籍清单菜单
+        // 最新书籍优先
+        $order = [
+            [
+                'field' => 'createTime',
+                'desc' => true,
+            ],
+        ];
+        $filter = [
+            [
+                'field' => 'isDel',
+                'method' => '=',
+                'value' => '0',
+            ],
+        ];
+        $result = \Application\Model\Book::fetchList(0,1,$order,null,$filter);
+        if ($result['countAll'] > 0) {
+            $bookList = array();
+
+            foreach ($result['rowset'] as $row){
+                $book = array();
+                $book['bookKey'] = $row['bookKey'];
+                $book['bookName'] = $row['bookName'];
+                $bookList[] = $book;
+            }
+            $this->view->setVar('bookList', $bookList);
+        }
 
     }
 
@@ -17,7 +46,6 @@ class BookController extends Controller
 
 	public function nameAction($bookKey = '', $infoType = '')
     {
-
 
         $bookKey = trim($bookKey);
         $infoType = trim($infoType);
@@ -77,18 +105,49 @@ class BookController extends Controller
         }
         $this->view->setVar('typeList', $typeList);
 
-        $filter = [
-            [
-                'field' => 'isDel',
-                'method' => '=',
-                'value' => '0',
-            ],
-        ];
-        $result = \Application\Model\Book::fetchList(0,1,null,null,$filter);
-        if ($result['countAll'] > 0) {
-            $this->view->setVar('BookList', $result['rowset']);
-        }
 
+    }
+
+    /**
+     * 页面--知识点详情
+     *
+     * @param int $infoId 知识点编号
+     * @return string JSON 类型列表
+     */
+    public function infoAction($infoId = '')
+    {
+        // 知识点
+        $info = \Application\Model\Info::fetchById(intval($infoId));
+
+        if(!empty($info)){
+
+            // 书
+            $oModelBook = \Application\Model\Book::fetchById($info->bookId);
+            if (empty($oModelBook) == false) {
+                $this->view->setVar('oBook', $oModelBook);
+
+                $infos = $oModelBook->getInfo();
+
+                if (empty($infos) == false) {
+
+                    foreach ($infos['rowset'] as $row) {
+                        $typeList[md5($row['type'])] = $row['type'];
+                    }
+                }
+
+                $this->view->setVar('info', $info);
+
+                $commentList = $oModelBook->getComment(1);
+
+                if (empty($commentList) == false) {
+                    $this->view->setVar('commentList', $commentList['rowset']);
+                }
+
+            }
+
+        $this->view->setVar('typeList', $typeList);
+
+        }
 
     }
 

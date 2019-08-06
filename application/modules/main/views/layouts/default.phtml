@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!--[if lt IE 8 ]>
+<html class="no-js ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>
+<html class="no-js ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 8)|!(IE)]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+
+    <!--- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title><?php
+        if (empty($oBook) == false) {
+            echo '《' . $oBook->bookName . '》笔记';
+
+            if (empty($infoType) == false) {
+                echo '-' . $infoType;
+            }
+        } else {
+            echo '读书笔记';
+        }
+        ?></title>
+    <meta name="keywords"  content="<?php
+    if (empty($oBook) == false) {
+        echo $oBook->bookName . ' ' . $oBook->bookSubname . ' 笔记 ' . $oBook->bookKey . ' ' . $oBook->author;
+        if (empty($infoList) == false) {
+            foreach ($infoList as $row) {
+                echo ' ' . $row['title'];
+            }
+        }
+        if (empty($typeList) == false) {
+            foreach ($typeList as $nowType) {
+                echo ' ' . $nowType;
+            }
+        }
+    }
+    ?>" />
+    <meta name="description" content="<?php
+    if (empty($oBook) == false) {
+        echo $oBook->bookName . ' ' . $oBook->bookSubname . ' 笔记 ' . $oBook->bookKey;
+    }
+    ?>">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="/css/default.css">
+    <link rel="stylesheet" href="/css/layout.css">
+    <link rel="stylesheet" href="/css/media-queries.css">
+
+
+    <!-- Script
+    ================================================== -->
+    <script src="/js/modernizr.js"></script>
+
+    <!-- Favicons
+     ================================================== -->
+    <link rel="shortcut icon" href="/images/favicon.ico">
+
+</head>
+
+<body>
+
+<!-- Header
+================================================== -->
+<header>
+
+    <div class="row">
+
+        <div class="twelve columns">
+
+            <div class="logo">
+                <a href="/">
+                    <img alt="读书笔记" src="/images/logo.png">
+                </a>
+            </div>
+
+            <nav id="nav-wrap">
+
+                <a class="mobile-btn" href="#nav-wrap" title="显示导航">显示导航</a>
+                <a class="mobile-btn" href="#" title="隐藏导航">隐藏导航</a>
+
+                <ul id="nav" class="nav">
+
+                    <li class="current"><a href="/">Home</a></li>
+                    <li><span><a href="javascript:void(0)">书籍清单</a></span>
+                        <ul>
+                            <?php
+                            if(!empty($bookList)){
+                                foreach ($bookList as $book){
+                            ?>
+                            <li><a href="/<?php echo $book['bookKey'] ?>"><?php echo $book['bookName'] ?></a></li>
+                            <?php
+                                }
+                            }
+                            ?>
+                        </ul>
+                    </li>
+
+                    <?php
+                    if($this->view->getControllerName() != 'index') {
+                        ?>
+                        <li><span><a href="javascript:void(0)">笔记类型</a></span>
+                            <ul>
+                                <?php
+                                if(!empty($typeList)){
+                                    foreach ($typeList as $type){
+                                        ?>
+                                        <li><a href="/<?php echo $oBook->bookKey; ?>/<?php echo $type ?>"><?php echo $type ?></a></li>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </li>
+                        <?php
+                    }
+                    ?>
+
+                </ul> <!-- end #nav -->
+
+            </nav> <!-- end #nav-wrap -->
+
+        </div>
+
+    </div>
+
+</header> <!-- Header End -->
+
+<?php echo $this->getContent(); ?>
+
+<div style="text-align:center">
+    <?php echo \Application\Model\Config::getValueByMark('ads2');?>
+</div>
+
+<!-- footer
+================================================== -->
+<footer style="margin-top: 30px; margin-bottom: 30px;">
+
+    <div class="row">
+
+        <div class="twelve columns">
+
+            <?php
+            $links = str_replace('\\\\','\\',\Application\Model\Config::getValueByMark('links'));
+            if (empty($links) == false) {
+                ?>
+                <p class="text-muted text-center small p-0 mb-4">
+                    友情连接：<?php echo $links; ?>
+                </p>
+                <?php
+            }
+            ?>
+            <div class="social d-table mx-auto">
+                <?php echo str_replace('\\\\','\\',\Application\Model\Config::getValueByMark('statistics'));?>
+            </div>
+
+            <p class="text-muted text-center small p-0 mb-4"><?php echo \Application\Model\Config::getValueByMark('copyright');?>
+            </p>
+
+        </div>
+
+        <div id="go-top" style="display: block;"><a title="返回顶部" href="#">返回顶部</a></div>
+
+    </div>
+
+</footer> <!-- Footer End-->
+
+<!-- Java Script
+================================================== -->
+<!--<script src="https://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>-->
+<script src="/js/jquery/jquery-3.1.1.min.js"></script>
+<!--<script>window.jQuery || document.write('<script src="/js/jquery-1.10.2.min.js"><\/script>')</script>-->
+<script>window.jQuery || document.write('<script src="/js/jquery-3.2.1.min.js"><\/script>')</script>
+<script type="text/javascript" src="/js/jquery/jquery-migrate-1.2.1.min.js"></script>
+
+<script src="/js/jquery/jquery.flexslider.js"></script>
+<script src="/js/doubletaptogo.js"></script>
+<script src="/js/init.js"></script>
+
+
+</body>
+</html>
