@@ -42,7 +42,7 @@
 
     <div id="page-content" class="row">
 
-        <div style="text-align:center">
+        <div style="text-align:center" id="ads">
             <?php echo \Application\Model\Config::getValueByMark('ads1');?>
         </div>
 
@@ -90,6 +90,11 @@
         <?php
             }
         ?>
+
+
+            <div style="text-align:center" id="ads">
+                <?php echo \Application\Model\Config::getValueByMark('ads2');?>
+            </div>
 
 
             <div id="comments">
