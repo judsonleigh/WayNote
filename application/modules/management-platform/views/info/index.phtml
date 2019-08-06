@@ -21,7 +21,7 @@
     </div>
     <div style="position:absolute;top:0;left:235px;height:100%;width:100%">
         <table id="dg" class="easyui-datagrid" title="知识点列表"
-               toolbar="#toolbar" pagination="true"
+               toolbar="#toolbar" pagination="true" autoRowHeight="false"
                rownumbers="false" fitColumns="true" singleSelect="true">
             <thead>
             <tr>
@@ -72,9 +72,9 @@
             <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="findSubmit();">查询</a>
         </div>
     </div>
-    <div id="dlg" class="easyui-window" style="padding:10px 20px;width:1050px;height:500px" closed="true" buttons="#dlg-buttons" resizable="true" data-options="modal:true,closed:true,iconCls:'icon-save',minimizable: false, collapsible:false">
+    <div id="dlg" class="easyui-window" style="padding:10px 20px;width:800px;height:680px" closed="true" buttons="#dlg-buttons" resizable="true" data-options="modal:true,closed:true,iconCls:'icon-save',minimizable: false, collapsible:false">
         <div class="ftitle">知识点信息</div>
-        <form id="fm" method="post" novalidate>
+        <form id="fm" method="post" novalidate enctype="multipart/form-data">
             <input name="bookId" type="hidden" id="bookId">
 
             <div style="margin-bottom:10px">
