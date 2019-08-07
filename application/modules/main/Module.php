@@ -46,10 +46,9 @@ class Module implements ModuleDefinitionInterface
                 $eventsManager->attach(
                     'dispatch:beforeException',
                     function (Event $event, $dispatcher, Exception $exception) {
-
+                        /*
                         // Handle 404 exceptions
                         if ($exception instanceof DispatchException) {
-
                             $dispatcher->forward(
                                 [
                                     'controller' => 'book',
@@ -83,6 +82,7 @@ class Module implements ModuleDefinitionInterface
 
                                 return false;
                         }
+                        */
                     }
                 );
 
