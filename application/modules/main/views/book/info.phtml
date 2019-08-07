@@ -82,13 +82,18 @@
 
                     <?php
                         echo htmlspecialchars_decode($info->introduce, ENT_QUOTES);
+
+                        if(!empty($info->url)){
                     ?>
 
                     <hr>
                     <span>参考资料：</span>
                     <a target="_blank" href="<?php echo $info->url; ?>">
-                        <?php echo $info->url; ?>">
+                        <?php echo $info->url; ?>
                     </a>
+
+                    <?php } ?>
+
                 </div>
 
             </article>
