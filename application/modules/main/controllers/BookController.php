@@ -105,7 +105,54 @@ class BookController extends Controller
         }
         $this->view->setVar('typeList', $typeList);
 
+        $htmlTitle = '《' . $oModelBook->bookName . '》';
+        $htmlKeywords = $oModelBook->bookName . ',' . $oModelBook->bookName . '笔记,' . $oModelBook->bookName . '读书笔记,' . $oModelBook->bookKey;
+        $htmlDescription = '《' . $oModelBook->bookName . '》';
 
+
+        if (empty($oModelBook->bookSubname) == false) {
+            $htmlTitle .= ' - ' . $oModelBook->bookSubname;
+            $htmlKeywords .= ',' . $oModelBook->bookSubname;
+            $htmlDescription .= '-' . $oModelBook->bookSubname;
+        }
+        if (empty($infoType) == false) {
+            $htmlTitle .= ' - ' . $infoType;
+        }
+
+        $htmlTitle .= ' - 读书笔记';
+        $htmlDescription .= '读书笔记，';
+
+        if (empty($oModelBook->author) == false) {
+            $htmlKeywords .= ',' . $oModelBook->author;
+            $htmlDescription .= '作者' . $oModelBook->author . '，';
+        }
+        $htmlDescription .= '包含';
+        if (empty($infoType) == false) {
+            $htmlKeywords .= ',' . $infoType;
+            $htmlDescription .= $infoType . '、';
+        } else {
+            foreach ($typeList as $nowType) {
+                $htmlKeywords .= ',' . $nowType;
+                $htmlDescription .= $nowType . '、';
+            }
+        }
+        $htmlDescription .= '等知识分类，';
+
+        $titleList = '';
+        $titleString = '';
+        if (empty($infos['rowset']) == false) {
+            foreach ($infos['rowset'] as $row) {
+                $titleList .= ',' . $row['title'];
+                $titleString .= $row['title'] . '、';
+            }
+        }
+        $htmlKeywords .= $titleList;
+        $htmlDescription .= '包含' . $titleString . '等知识点。';
+
+
+        $this->view->setVar('htmlTitle', $htmlTitle);
+        $this->view->setVar('htmlKeywords', $htmlKeywords);
+        $this->view->setVar('htmlDescription', $htmlDescription);
     }
 
     /**
@@ -152,8 +199,38 @@ class BookController extends Controller
 
             }
 
-        $this->view->setVar('typeList', $typeList);
+            $this->view->setVar('typeList', $typeList);
 
+            $htmlTitle = $info->title . ' - ' . $info->type . ' - 《' . $oModelBook->bookName . '》';
+            $htmlKeywords = $info->title . ',' . $info->type . ',' . $oModelBook->bookName;
+
+            if (empty($oModelBook->bookSubname) == false) {
+                $htmlTitle .= ' - ' . $oModelBook->bookSubname;
+                $htmlKeywords .= ',' . $oModelBook->bookSubname;
+            }
+            $htmlTitle .= ' - 读书笔记';
+
+            if (empty($oModelBook->author) == false) {
+                $htmlKeywords .= ',' . $oModelBook->author;
+            }
+
+            $introduce = strip_tags($info->introduce);
+            $introduce = trim($introduce);
+            $introduce = str_replace("\t","",$introduce);
+            $introduce = str_replace("\r\n","",$introduce);
+            $introduce = str_replace("\r","",$introduce);
+            $introduce = str_replace("\n","",$introduce);
+            $introduce = str_replace(" ","",$introduce);
+
+            $htmlDescription = $info->title . ',' . $info->type . ',' . $introduce;
+
+            $this->view->setVar('htmlTitle', $htmlTitle);
+            $this->view->setVar('htmlKeywords', $htmlKeywords);
+            $this->view->setVar('htmlDescription', $htmlDescription);
+
+        } else {
+            header('Location: /');
+            return;
         }
 
     }
