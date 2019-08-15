@@ -238,10 +238,13 @@
                     <ul class="link-list cf">
                         <?php
                         if(!empty($bookList)){
+                            echo  "<li><a href=\"/$oBook->bookKey\">" . $oBook->bookName . "</a></li>";
                             foreach ($bookList as $book) {
+                                if($book['bookName'] != $oBook->bookName){
                         ?>
                             <li><a href="/<?php echo $book['bookKey'] ?>"><?php echo $book['bookName'] ?></a></li>
                         <?php
+                                }
                             }
                         }
                         ?>
