@@ -26,7 +26,7 @@
             if(!empty($bookDetails)){
                 foreach ($bookDetails as $book){
         ?>
-            <div class="columns portfolio-item">
+            <div class="columns portfolio-item" style="height: 500px">
                 <div class="item-wrap">
                     <a href="/<?php echo $book['bookKey'] ?>">
 
@@ -47,7 +47,13 @@
                     </a>
                     <div class="portfolio-item-meta">
                         <h5><a href="/<?php echo $book['bookKey'] ?>"><?php echo $book['bookName'] ?></a></h5>
-                        <p><?php echo $book['bookName'] ?></p>
+                        <p>
+                            <?php
+                                if(!empty($book['bookSubname'])){
+                                    echo $book['bookSubname'];
+                                }
+                            ?>
+                        </p>
                     </div>
                 </div>
             </div>
