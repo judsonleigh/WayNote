@@ -63,10 +63,21 @@ class IndexController extends Controller
 
         $result = \Application\Model\Book::fetchList(0,1,$order,null,$filter);
 
+        $htmlKeywords = '读书笔记';
+        $htmlDescription = '个人整理的';
         if ($result['countAll'] > 0) {
             $this->view->setVar('bookDetails', $result['rowset']);
+
+            foreach ($result['rowset'] as $row) {
+                $htmlKeywords .= ',' . $row['bookName'];
+                $htmlDescription .= '《' . $row['bookName'] . '》笔记、' ;
+            }
+
         }
 
+        $this->view->setVar('htmlTitle', '读书笔记');
+        $this->view->setVar('htmlKeywords', $htmlKeywords);
+        $this->view->setVar('htmlDescription', $htmlDescription);
     }
 
 }

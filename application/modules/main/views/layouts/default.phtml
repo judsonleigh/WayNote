@@ -6,38 +6,20 @@
 
     <meta charset="utf-8">
     <title><?php
-        if (empty($oBook) == false) {
-            echo '《' . $oBook->bookName . '》笔记';
-
-            if (empty($infoType) == false) {
-                echo '-' . $infoType;
-            }
-        } else {
-            echo '读书笔记';
+        if (empty($htmlTitle) == false) {
+            echo $htmlTitle;
         }
         ?></title>
     <meta name="keywords"  content="<?php
-    if (empty($oBook) == false) {
-        echo $oBook->bookName . ' ' . $oBook->bookSubname . ' 笔记 ' . $oBook->bookKey . ' ' . $oBook->author;
-        if (empty($infoList) == false) {
-            foreach ($infoList as $row) {
-                echo '、' . $row['title'];
-            }
-        }
-        if (empty($typeList) == false) {
-            foreach ($typeList as $nowType) {
-                echo '、' . $nowType;
-            }
-        }
+    if (empty($htmlKeywords) == false) {
+        echo $htmlKeywords;
     }
     ?>" />
     <meta name="description" content="<?php
-    if (empty($oBook) == false) {
-        echo $oBook->bookName . ' ' . $oBook->bookSubname . ' 笔记 ' . $oBook->bookKey;
+    if (empty($htmlDescription) == false) {
+        echo $htmlDescription;
     }
     ?>">
-    <meta name="author" content="">
-
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
     <link rel="stylesheet" href="/css/default.css">
@@ -118,6 +100,7 @@
                         ?>
                         <li><span><a href="javascript:void(0)">笔记类型</a></span>
                             <ul>
+                                <li><a href="/<?php echo $oBook->bookKey; ?>/">全部</a></li>
                                 <?php
                                 if(!empty($typeList)){
                                     foreach ($typeList as $type){

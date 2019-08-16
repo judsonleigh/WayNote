@@ -138,6 +138,53 @@ try {
     $di->set('router',function(){
         $router = new Router();
 
+        $router->add("/:params", array(
+            'module'     => "main",
+            'controller' => "book",
+            'action' => "name",
+            'params' => 1,
+        ));
+
+        $router->add("/book/:action/:params", array(
+            'module'     => "main",
+            'controller' => "book",
+            'action' => 1,
+            'params' => 2,
+        ));
+
+        $router->add("/file/:action/:params", array(
+            'module'     => "main",
+            'controller' => "file",
+            'action' => 1,
+            'params' => 2,
+        ));
+
+        $router->add("/comment/:action/:params", array(
+            'module'     => "main",
+            'controller' => "comment",
+            'action' => 1,
+            'params' => 2,
+        ));
+
+        $router->add("/", array(
+            'module'     => "main",
+            'controller' => "index",
+            'action' => "index",
+        ));
+
+        $router->add("/index/", array(
+            'module'     => "main",
+            'controller' => "index",
+            'action' => "index",
+        ));
+
+        $router->add("/index/:action/:params", array(
+            'module'     => "main",
+            'controller' => "index",
+            'action' => 1,
+            'params' => 2,
+        ));
+
 
         $router->add("/management-platform/", array(
             'module'     => "management-platform",
