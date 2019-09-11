@@ -17,13 +17,13 @@
 
         <div class="ten columns centered">
             <div style="padding-top: 20px"></div>
-            <h2 style="color: white; padding-bottom: 30px">《<?php echo $oBook->bookName; ?>》笔记
+            <h1 style="color: white; padding-bottom: 20px; font-size: 30px">《<?php echo $oBook->bookName; ?>》笔记
                 <?php
                     if (empty($infoType) == false) {
                         echo '—' . $infoType;
                     }
                 ?>
-            </h2>
+            </h1>
 
             <?php
             if (empty($oBook->bookSubname) == false) {
@@ -65,7 +65,7 @@
                 <div class="entry-header cf">
 
                     <!-- 知识点 -->
-                    <h1><a href="/book/info/<?php echo $row['infoId'] ?>"><?php echo $row['title'] ?></a></h1>
+                    <h2 style="font: 39px/48px raleway-semibold, sans-serif;margin-bottom: 18px; color: black"><a href="/book/info/<?php echo $row['infoId'] ?>"><?php echo $row['title'] ?></a></h2>
 
                     <!-- 类型 -->
                     <h5 class="widget-title"><?php echo $row['type'] ?></h5>
@@ -165,7 +165,7 @@
 
                 <div class="respond">
 
-                    <h1 style="text-align: center; letter-spacing:25px">评论</h1>
+                    <h2 style="text-align: center; letter-spacing:25px">评论</h2>
 
 
                     <form name="contactForm" id="contactForm" method="post" style="margin-top: 0px">
